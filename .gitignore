@@ -1,0 +1,5 @@
+/bin
+/BLD
+/*.log*
+/*.jar
+/tmp

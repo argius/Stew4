@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     Stew
+     SQL Testing Environment With JDBC
+     ====================================================================== -->
+<project name="Stew4 build" default="build">
+
+    <!-- ENVIRONMENT VERSION INFO -->
+    <echo level="info" message="Ant  = ${ant.version}" />
+    <echo level="info" message="java = ${ant.java.version}" />
+
+    <!-- PROPERTIES -->
+    <property name="jar" value="stew.jar" />
+    <property name="src" value="src" />
+    <property name="bin" value="BLD" />
+
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: clean                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="clean">
+        <mkdir dir="${bin}" />
+        <delete includeEmptyDirs="yes">
+            <fileset dir="${bin}" includes="**" />
+        </delete>
+    </target>
+
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: compile
+         - - - - - - - - - - - - - - - - - -->
+    <target name="compile">
+        <mkdir dir="${bin}" />
+        <javac fork="yes"
+               srcdir="${src}"
+               destdir="${bin}"
+               source="1.6"
+               target="1.6"
+               encoding="utf-8"
+               optimize="yes"
+               deprecation="no"
+               debug="yes"
+               debuglevel="source,lines">
+            <include name="**/*.java" />
+        </javac>
+        <copy todir="${bin}">
+            <fileset dir="${src}">
+                <include name="**/version" />
+                <include name="**/*.u8p" />
+                <include name="**/*.png" />
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: archive
+         - - - - - - - - - - - - - - - - - -->
+    <target name="archive" depends="compile">
+        <jar destfile="${jar}" manifest="${src}/MANIFEST.MF">
+            <fileset dir="${bin}">
+                <include name="net/**" />
+            </fileset>
+        </jar>
+    </target>
+
+    <!-- ================================= 
+          target: build
+         ================================= -->
+    <target name="build" depends="archive" />
+
+</project>

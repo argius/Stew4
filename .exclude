@@ -1,0 +1,5 @@
+.*
+BLD
+src.test
+MANUAL_ja.txt
+checkstyle.xml

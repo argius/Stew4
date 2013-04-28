@@ -1,0 +1,6 @@
+body { font-family: monospace; font-size: 80%; margin-left: 8%; margin-right: 8%; }
+pre { background-color: #cccccc; padding: 2ex; }
+dl { margin-left: 2.5%; }
+dt { text-decoration: underline; }
+strong { color: red; font-weight: bold; }
+.caution { color: red; font-weight: bold; }
