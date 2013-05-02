@@ -232,7 +232,7 @@ public final class WindowLauncher implements
             } else if (ev.isAnyOf(quit)) {
                 requestExit();
             } else if (ev.isAnyOf(showInfoTree)) {
-                setInfoTreePane(((JCheckBoxMenuItem)source).isSelected());
+                setInfoTreePaneVisibility(((JCheckBoxMenuItem)source).isSelected());
                 op.validate();
                 op.repaint();
             } else if (ev.isAnyOf(cut, copy, paste, selectAll)) {
@@ -373,7 +373,7 @@ public final class WindowLauncher implements
      * Controls visibility of DatabaseInfoTree pane.
      * @param show
      */
-    void setInfoTreePane(boolean show) {
+    void setInfoTreePaneVisibility(boolean show) {
         if (show) {
             split1.removeAll();
             split1.setTopComponent(new JScrollPane(infoTree));
@@ -409,7 +409,7 @@ public final class WindowLauncher implements
         op.setAlwaysOnTop(cnf.isAlwaysOnTop());
         resultSetTable.setAutoAdjustMode(cnf.getAutoAdjustMode());
         op.setPostProcessMode(cnf.getPostProcessMode());
-        setInfoTreePane(cnf.isShowInfoTree());
+        setInfoTreePaneVisibility(cnf.isShowInfoTree());
         changeFont("monospaced", Font.PLAIN, 1.0d);
     }
 
