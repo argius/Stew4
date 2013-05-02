@@ -76,26 +76,6 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
         }
     }
 
-    static Set<String> collectTableName(TreePath[] paths, List<ColumnNode> out) {
-        Set<String> a = new LinkedHashSet<String>();
-        for (TreePath path : paths) {
-            InfoNode node = (InfoNode)path.getLastPathComponent();
-            if (node instanceof TableNode) {
-                TableNode tableNode = (TableNode)node;
-                if (tableNode.isKindOfTable()) {
-                    a.add(tableNode.getNodeFullName());
-                }
-            } else if (node instanceof ColumnNode) {
-                ColumnNode columnNode = (ColumnNode)node;
-                if (columnNode.getTableNode().isKindOfTable()) {
-                    a.add(columnNode.getTableNode().getName());
-                    out.add(columnNode);
-                }
-            }
-        }
-        return a;
-    }
-
     @Override
     public void anyActionPerformed(AnyActionEvent ev) {
         log.atEnter("anyActionPerformed", ev);
@@ -109,38 +89,38 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
             }
         } else if (ev.isAnyOf(generateWherePhrase)) {
             TreePath[] paths = getSelectionPaths();
-            List<ColumnNode> columns = new ArrayList<ColumnNode>();
-            Set<String> tableNames = collectTableName(paths, columns);
-            if (!tableNames.isEmpty()) {
+            List<ColumnNode> columns = collectColumnNode(paths);
+            String[] tableNames = collectTableName(columns);
+            if (tableNames.length != 0) {
                 insertTextToTextArea(generateEquivalentJoinClause(columns));
             }
         } else if (ev.isAnyOf(generateSelectPhrase)) {
             TreePath[] paths = getSelectionPaths();
-            List<ColumnNode> columns = new ArrayList<ColumnNode>();
-            Set<String> tableNames = collectTableName(paths, columns);
-            if (!tableNames.isEmpty()) {
+            List<ColumnNode> columns = collectColumnNode(paths);
+            String[] tableNames = collectTableName(columns);
+            if (tableNames.length != 0) {
                 List<String> columnNames = new ArrayList<String>();
-                final boolean one = tableNames.size() == 1;
+                final boolean one = tableNames.length == 1;
                 for (ColumnNode node : columns) {
                     columnNames.add(one ? node.getName() : node.getNodeFullName());
                 }
                 final String columnString = (columnNames.isEmpty())
                         ? "*"
                         : TextUtilities.join(", ", columnNames);
-                final String tableString = joinByComma(new ArrayList<String>(tableNames));
+                final String tableString = joinByComma(Arrays.asList(tableNames));
                 insertTextToTextArea(String.format("SELECT %s FROM %s WHERE ", columnString, tableString));
             }
         } else if (ev.isAnyOf(generateUpdateStatement)) {
             TreePath[] paths = getSelectionPaths();
-            List<ColumnNode> columns = new ArrayList<ColumnNode>();
-            Set<String> tableNames = collectTableName(paths, columns);
-            if (tableNames.isEmpty()) {
+            List<ColumnNode> columns = collectColumnNode(paths);
+            String[] tableNames = collectTableName(columns);
+            if (tableNames.length == 0) {
                 return;
             }
-            if (tableNames.size() != 1 || columns.isEmpty()) {
+            if (tableNames.length != 1 || columns.isEmpty()) {
                 showInformationMessageDialog(this, res.get("e.enables-select-just-1-table"), "");
             } else {
-                final String tableName = tableNames.toArray(new String[1])[0];
+                final String tableName = tableNames[0];
                 List<String> columnExpressions = new ArrayList<String>();
                 for (ColumnNode columnNode : columns) {
                     columnExpressions.add(columnNode.getName() + "=?");
@@ -220,18 +200,42 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
         ClipboardHelper.setStrings(names);
     }
 
+    private static List<ColumnNode> collectColumnNode(TreePath[] paths) {
+        List<ColumnNode> a = new ArrayList<ColumnNode>();
+        if (paths != null) {
+            for (TreePath path : paths) {
+                InfoNode node = (InfoNode)path.getLastPathComponent();
+                if (node instanceof ColumnNode) {
+                    ColumnNode columnNode = (ColumnNode)node;
+                    if (columnNode.getTableNode().isKindOfTable()) {
+                        a.add(columnNode);
+                    }
+                }
+            }
+        }
+        return a;
+    }
+
+    private static String[] collectTableName(List<ColumnNode> columnNodes) {
+        Set<String> tableNames = new LinkedHashSet<String>();
+        for (final ColumnNode node : columnNodes) {
+            tableNames.add(node.getTableNode().getNodeFullName());
+        }
+        return tableNames.toArray(new String[tableNames.size()]);
+    }
+
     private void generateInsertStatement() {
         TreePath[] paths = getSelectionPaths();
-        List<ColumnNode> columns = new ArrayList<ColumnNode>();
-        Set<String> tableNames = collectTableName(paths, columns);
-        if (tableNames.isEmpty()) {
+        List<ColumnNode> columns = collectColumnNode(paths);
+        String[] tableNames = collectTableName(columns);
+        if (tableNames.length == 0) {
             return;
         }
-        if (tableNames.size() != 1) {
+        if (tableNames.length != 1) {
             showInformationMessageDialog(this, res.get("e.enables-select-just-1-table"), "");
             return;
         }
-        final String tableName = tableNames.toArray(new String[1])[0];
+        final String tableName = tableNames[0];
         List<String> columnNames = new ArrayList<String>();
         final Iterable<ColumnNode> columnNodes;
         if (columns.isEmpty()) {
