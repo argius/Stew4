@@ -154,9 +154,9 @@ final class CommandProcessor {
             return true;
         }
         // alias
-        Alias alias = env.getAlias();
+        AliasMap aliasMap = env.getAliasMap();
         if (commandName.equalsIgnoreCase("alias") || commandName.equalsIgnoreCase("unalias")) {
-            alias.reload();
+            aliasMap.reload();
             if (commandName.equalsIgnoreCase("alias")) {
                 if (p.has(2)) {
                     final String keyword = p.at(1);
@@ -164,37 +164,37 @@ final class CommandProcessor {
                         outputMessage("w.unusable-keyword-for-alias", keyword);
                         return true;
                     }
-                    alias.setValue(keyword, p.after(2));
-                    alias.save();
+                    aliasMap.setValue(keyword, p.after(2));
+                    aliasMap.save();
                 } else if (p.has(1)) {
                     final String keyword = p.at(1);
                     if (isUsableKeywordForAlias(keyword)) {
                         outputMessage("w.unusable-keyword-for-alias", keyword);
                         return true;
                     }
-                    if (alias.containsKey(keyword)) {
-                        outputMessage("i.dump-alias", keyword, alias.getValue(keyword));
+                    if (aliasMap.containsKey(keyword)) {
+                        outputMessage("i.dump-alias", keyword, aliasMap.getValue(keyword));
                     }
                 } else {
-                    if (alias.isEmpty()) {
+                    if (aliasMap.isEmpty()) {
                         outputMessage("i.noalias");
                     } else {
-                        for (final String key : new TreeSet<String>(alias.keys())) {
-                            outputMessage("i.dump-alias", key, alias.getValue(key));
+                        for (final String key : new TreeSet<String>(aliasMap.keys())) {
+                            outputMessage("i.dump-alias", key, aliasMap.getValue(key));
                         }
                     }
                 }
             } else if (commandName.equalsIgnoreCase("unalias")) {
                 if (p.has(1)) {
-                    alias.remove(p.at(1));
-                    alias.save();
+                    aliasMap.remove(p.at(1));
+                    aliasMap.save();
                 } else {
                     throw new UsageException(res.get("usage.unalias"));
                 }
             }
             return true;
-        } else if (alias.containsKey(commandName)) {
-            final String command = alias.expand(commandName, p);
+        } else if (aliasMap.containsKey(commandName)) {
+            final String command = aliasMap.expand(commandName, p);
             op.output(" >> " + command);
             invoke(command);
             return true;

@@ -27,7 +27,7 @@ public final class Environment {
     private File systemDirectory;
     private File currentDirectory;
     private long connectorTimestamp;
-    private Alias alias;
+    private AliasMap aliasMap;
 
     /**
      * A constructor.
@@ -42,10 +42,10 @@ public final class Environment {
         this.currentDirectory = getInitialCurrentDirectory();
         // init alias
         final File aliasPropFile = new File(this.systemDirectory, ALIAS_PROPERTIES_NAME);
-        this.alias = new Alias(aliasPropFile);
+        this.aliasMap = new AliasMap(aliasPropFile);
         if (aliasPropFile.exists()) {
             try {
-                alias.load();
+                aliasMap.load();
             } catch (IOException ex) {
                 log.warn(ex);
             }
@@ -260,8 +260,8 @@ public final class Environment {
         return systemDirectory;
     }
 
-    public Alias getAlias() {
-        return alias;
+    public AliasMap getAliasMap() {
+        return aliasMap;
     }
 
 }

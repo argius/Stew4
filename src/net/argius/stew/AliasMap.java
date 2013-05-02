@@ -5,16 +5,16 @@ import java.util.*;
 import java.util.Map.Entry;
 
 /**
- * Alias.
+ * Alias Map.
  */
-final class Alias {
+final class AliasMap {
 
     private final Properties properties;
     private final File file;
 
     private long timestamp;
 
-    Alias(File file) {
+    AliasMap(File file) {
         this.properties = new Properties();
         this.file = file;
         this.timestamp = 0L;
@@ -61,6 +61,18 @@ final class Alias {
         return properties.isEmpty();
     }
 
+    Set<String> keys() {
+        Set<String> set = new LinkedHashSet<String>();
+        for (final Object o : Collections.list(properties.propertyNames())) {
+            set.add((String)o);
+        }
+        return set;
+    }
+
+    Set<Entry<Object, Object>> entrySet() {
+        return properties.entrySet();
+    }
+
     void load() throws IOException {
         InputStream is = new FileInputStream(file);
         try {
@@ -104,16 +116,5 @@ final class Alias {
         return file.lastModified() > timestamp;
     }
 
-    Set<String> keys() {
-        Set<String> set = new LinkedHashSet<String>();
-        for (final Object o : Collections.list(properties.propertyNames())) {
-            set.add((String)o);
-        }
-        return set;
-    }
-
-    Set<Entry<Object, Object>> entrySet() {
-        return properties.entrySet();
-    }
 
 }
