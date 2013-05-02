@@ -207,8 +207,12 @@ final class Menu extends JMenuBar implements PropertyChangeListener {
             itemToCompMap.get(showInfoTree).setSelected(((Component)source).isEnabled());
         } else if (source instanceof JFrame && propertyName.equals("alwaysOnTop")) {
             itemToCompMap.get(showAlwaysOnTop).setSelected((Boolean)e.getNewValue());
-        } else if (source instanceof WindowOutputProcessor
-                   && propertyName.equals("autoAdjustMode|postProcessMode")) {
+        } else if (source instanceof ResultSetTable && propertyName.equals("autoAdjustMode")) {
+            final String itemName = e.getNewValue().toString();
+            if (!itemName.matches("[A-Z_]+")) { // ignore old version
+                itemToCompMap.get(Item.valueOf(itemName)).setSelected(true);
+            }
+        } else if (source instanceof WindowOutputProcessor && propertyName.equals("postProcessMode")) {
             final String itemName = e.getNewValue().toString();
             if (!itemName.matches("[A-Z_]+")) { // ignore old version
                 itemToCompMap.get(Item.valueOf(itemName)).setSelected(true);
