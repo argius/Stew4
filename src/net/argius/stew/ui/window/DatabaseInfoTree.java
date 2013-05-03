@@ -7,6 +7,7 @@ import static java.awt.event.KeyEvent.VK_C;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.nCopies;
 import static javax.swing.KeyStroke.getKeyStroke;
+import static net.argius.stew.text.TextUtilities.join;
 import static net.argius.stew.ui.window.AnyActionKey.copy;
 import static net.argius.stew.ui.window.AnyActionKey.refresh;
 import static net.argius.stew.ui.window.DatabaseInfoTree.ActionKey.*;
@@ -25,7 +26,6 @@ import javax.swing.event.*;
 import javax.swing.tree.*;
 
 import net.argius.stew.*;
-import net.argius.stew.text.*;
 
 /**
  * The Database Information Tree is a tree pane that provides to
@@ -88,47 +88,11 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
                 refresh((InfoNode)path.getLastPathComponent());
             }
         } else if (ev.isAnyOf(generateWherePhrase)) {
-            TreePath[] paths = getSelectionPaths();
-            List<ColumnNode> columns = collectColumnNode(paths);
-            String[] tableNames = collectTableName(columns);
-            if (tableNames.length != 0) {
-                insertTextToTextArea(generateEquivalentJoinClause(columns));
-            }
+            generateWherePhrase();
         } else if (ev.isAnyOf(generateSelectPhrase)) {
-            TreePath[] paths = getSelectionPaths();
-            List<ColumnNode> columns = collectColumnNode(paths);
-            String[] tableNames = collectTableName(columns);
-            if (tableNames.length != 0) {
-                List<String> columnNames = new ArrayList<String>();
-                final boolean one = tableNames.length == 1;
-                for (ColumnNode node : columns) {
-                    columnNames.add(one ? node.getName() : node.getNodeFullName());
-                }
-                final String columnString = (columnNames.isEmpty())
-                        ? "*"
-                        : TextUtilities.join(", ", columnNames);
-                final String tableString = joinByComma(Arrays.asList(tableNames));
-                insertTextToTextArea(String.format("SELECT %s FROM %s WHERE ", columnString, tableString));
-            }
+            generateSelectPhrase();
         } else if (ev.isAnyOf(generateUpdateStatement)) {
-            TreePath[] paths = getSelectionPaths();
-            List<ColumnNode> columns = collectColumnNode(paths);
-            String[] tableNames = collectTableName(columns);
-            if (tableNames.length == 0) {
-                return;
-            }
-            if (tableNames.length != 1 || columns.isEmpty()) {
-                showInformationMessageDialog(this, res.get("e.enables-select-just-1-table"), "");
-            } else {
-                final String tableName = tableNames[0];
-                List<String> columnExpressions = new ArrayList<String>();
-                for (ColumnNode columnNode : columns) {
-                    columnExpressions.add(columnNode.getName() + "=?");
-                }
-                insertTextToTextArea(String.format("UPDATE %s SET %s WHERE ",
-                                                   tableName,
-                                                   joinByComma(columnExpressions)));
-            }
+            generateUpdateStatement();
         } else if (ev.isAnyOf(generateInsertStatement)) {
             generateInsertStatement();
         } else if (ev.isAnyOf(jumpToColumnByName)) {
@@ -145,17 +109,6 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
     private void insertTextToTextArea(String s) {
         AnyActionEvent ev = new AnyActionEvent(this, ConsoleTextArea.ActionKey.insertText, s);
         anyActionListener.anyActionPerformed(ev);
-    }
-
-    private static String joinByComma(List<?> a) {
-        StringBuilder buffer = new StringBuilder();
-        for (int i = 0, n = a.size(); i < n; i++) {
-            if (i != 0) {
-                buffer.append(", ");
-            }
-            buffer.append(a.get(i));
-        }
-        return buffer.toString();
     }
 
     private void copySimpleName() {
@@ -200,40 +153,56 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
         ClipboardHelper.setStrings(names);
     }
 
-    private static List<ColumnNode> collectColumnNode(TreePath[] paths) {
-        List<ColumnNode> a = new ArrayList<ColumnNode>();
-        if (paths != null) {
-            for (TreePath path : paths) {
-                InfoNode node = (InfoNode)path.getLastPathComponent();
-                if (node instanceof ColumnNode) {
-                    ColumnNode columnNode = (ColumnNode)node;
-                    a.add(columnNode);
-                }
-            }
+    private void generateWherePhrase() {
+        List<ColumnNode> columns = collectColumnNode(getSelectionPaths());
+        if (!columns.isEmpty()) {
+            insertTextToTextArea(generateEquivalentJoinClause(columns));
         }
-        return a;
     }
 
-    private static List<TableNode> collectTableNode(TreePath[] paths) {
-        List<TableNode> a = new ArrayList<TableNode>();
-        if (paths != null) {
-            for (TreePath path : paths) {
-                InfoNode node = (InfoNode)path.getLastPathComponent();
-                if (node instanceof TableNode) {
-                    TableNode columnNode = (TableNode)node;
-                    a.add(columnNode);
-                }
+    private void generateSelectPhrase() {
+        TreePath[] paths = getSelectionPaths();
+        List<ColumnNode> columns = collectColumnNode(paths);
+        final String columnString;
+        final String tableString;
+        if (columns.isEmpty()) {
+            List<TableNode> tableNodes = collectTableNode(paths);
+            if (tableNodes.isEmpty()) {
+                return;
             }
+            columnString = "*";
+            tableString = join(",", tableNodes);
+        } else {
+            List<String> columnNames = new ArrayList<String>();
+            String[] tableNames = collectTableName(columns);
+            final boolean one = tableNames.length == 1;
+            for (ColumnNode node : columns) {
+                columnNames.add(one ? node.getName() : node.getNodeFullName());
+            }
+            columnString = join(", ", columnNames);
+            tableString = join(",", Arrays.asList(tableNames));
         }
-        return a;
+        insertTextToTextArea(String.format("SELECT %s FROM %s WHERE ", columnString, tableString));
     }
 
-    private static String[] collectTableName(List<ColumnNode> columnNodes) {
-        Set<String> tableNames = new LinkedHashSet<String>();
-        for (final ColumnNode node : columnNodes) {
-            tableNames.add(node.getTableNode().getNodeFullName());
+    private void generateUpdateStatement() {
+        TreePath[] paths = getSelectionPaths();
+        List<ColumnNode> columns = collectColumnNode(paths);
+        String[] tableNames = collectTableName(columns);
+        if (tableNames.length == 0) {
+            return;
         }
-        return tableNames.toArray(new String[tableNames.size()]);
+        if (tableNames.length != 1 || columns.isEmpty()) {
+            showInformationMessageDialog(this, res.get("e.enables-select-just-1-table"), "");
+            return;
+        }
+        List<String> columnExpressions = new ArrayList<String>();
+        for (ColumnNode columnNode : columns) {
+            columnExpressions.add(columnNode.getName() + "=?");
+        }
+        insertTextToTextArea(String.format("UPDATE %s SET %s WHERE ",
+                                           tableNames[0],
+                                           join(",", columnExpressions)));
     }
 
     private void generateInsertStatement() {
@@ -277,9 +246,9 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
         final int columnCount = columnNames.size();
         insertTextToTextArea(String.format("INSERT INTO %s (%s) VALUES (%s);%s",
                                            tableName,
-                                           joinByComma(columnNames),
-                                           joinByComma(nCopies(columnCount, "?")),
-                                           TextUtilities.join(",", nCopies(columnCount, ""))));
+                                           join(",", columnNames),
+                                           join(",", nCopies(columnCount, "?")),
+                                           join(",", nCopies(columnCount, ""))));
     }
 
     private void jumpToColumnByName() {
@@ -297,6 +266,84 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
             anyActionListener.anyActionPerformed(ev);
         }
     }
+
+    private static List<ColumnNode> collectColumnNode(TreePath[] paths) {
+        List<ColumnNode> a = new ArrayList<ColumnNode>();
+        if (paths != null) {
+            for (TreePath path : paths) {
+                InfoNode node = (InfoNode)path.getLastPathComponent();
+                if (node instanceof ColumnNode) {
+                    ColumnNode columnNode = (ColumnNode)node;
+                    a.add(columnNode);
+                }
+            }
+        }
+        return a;
+    }
+
+    private static List<TableNode> collectTableNode(TreePath[] paths) {
+        List<TableNode> a = new ArrayList<TableNode>();
+        if (paths != null) {
+            for (TreePath path : paths) {
+                InfoNode node = (InfoNode)path.getLastPathComponent();
+                if (node instanceof TableNode) {
+                    TableNode columnNode = (TableNode)node;
+                    a.add(columnNode);
+                }
+            }
+        }
+        return a;
+    }
+
+    private static String[] collectTableName(List<ColumnNode> columnNodes) {
+        Set<String> tableNames = new LinkedHashSet<String>();
+        for (final ColumnNode node : columnNodes) {
+            tableNames.add(node.getTableNode().getNodeFullName());
+        }
+        return tableNames.toArray(new String[tableNames.size()]);
+    }
+
+    static String generateEquivalentJoinClause(List<ColumnNode> nodes) {
+        if (nodes.isEmpty()) {
+            return "";
+        }
+        ListMap tm = new ListMap();
+        ListMap cm = new ListMap();
+        for (ColumnNode node : nodes) {
+            final String tableName = node.getTableNode().getName();
+            final String columnName = node.getName();
+            tm.add(tableName, columnName);
+            cm.add(columnName, String.format("%s.%s", tableName, columnName));
+        }
+        List<String> expressions = new ArrayList<String>();
+        if (tm.size() == 1) {
+            for (ColumnNode node : nodes) {
+                expressions.add(String.format("%s=?", node.getName()));
+            }
+        } else {
+            final String tableName = nodes.get(0).getTableNode().getName();
+            for (String c : tm.get(tableName)) {
+                expressions.add(String.format("%s.%s=?", tableName, c));
+            }
+            for (Entry<String, List<String>> entry : cm.entrySet()) {
+                if (!entry.getKey().equals(tableName) && entry.getValue().size() == 1) {
+                    expressions.add(String.format("%s=?", entry.getValue().get(0)));
+                }
+            }
+            for (Entry<String, List<String>> entry : cm.entrySet()) {
+                Object[] a = entry.getValue().toArray();
+                final int n = a.length;
+                for (int i = 0; i < n; i++) {
+                    for (int j = i + 1; j < n; j++) {
+                        expressions.add(String.format("%s=%s", a[i], a[j]));
+                    }
+                }
+            }
+        }
+        return join(" AND ", expressions) + ';';
+    }
+
+    // text-search
 
     @Override
     public boolean search(Matcher matcher) {
@@ -344,6 +391,8 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
     public void reset() {
         // empty
     }
+
+    // node expansion
 
     /**
      * Refreshes the root and its children.
@@ -548,46 +597,6 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
         if (log.isDebugEnabled()) {
             log.debug("cleared");
         }
-    }
-
-    static String generateEquivalentJoinClause(List<ColumnNode> nodes) {
-        if (nodes.isEmpty()) {
-            return "";
-        }
-        ListMap tm = new ListMap();
-        ListMap cm = new ListMap();
-        for (ColumnNode node : nodes) {
-            final String tableName = node.getTableNode().getName();
-            final String columnName = node.getName();
-            tm.add(tableName, columnName);
-            cm.add(columnName, String.format("%s.%s", tableName, columnName));
-        }
-        List<String> expressions = new ArrayList<String>();
-        if (tm.size() == 1) {
-            for (ColumnNode node : nodes) {
-                expressions.add(String.format("%s=?", node.getName()));
-            }
-        } else {
-            final String tableName = nodes.get(0).getTableNode().getName();
-            for (String c : tm.get(tableName)) {
-                expressions.add(String.format("%s.%s=?", tableName, c));
-            }
-            for (Entry<String, List<String>> entry : cm.entrySet()) {
-                if (!entry.getKey().equals(tableName) && entry.getValue().size() == 1) {
-                    expressions.add(String.format("%s=?", entry.getValue().get(0)));
-                }
-            }
-            for (Entry<String, List<String>> entry : cm.entrySet()) {
-                Object[] a = entry.getValue().toArray();
-                final int n = a.length;
-                for (int i = 0; i < n; i++) {
-                    for (int j = i + 1; j < n; j++) {
-                        expressions.add(String.format("%s=%s", a[i], a[j]));
-                    }
-                }
-            }
-        }
-        return TextUtilities.join(" AND ", expressions) + ';';
     }
 
     @Override
@@ -881,7 +890,7 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
                 a.add(schema);
             }
             a.add(name);
-            return TextUtilities.join(".", a);
+            return join(".", a);
         }
 
         String getName() {
