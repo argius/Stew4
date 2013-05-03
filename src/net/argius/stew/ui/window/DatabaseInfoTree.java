@@ -207,9 +207,21 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
                 InfoNode node = (InfoNode)path.getLastPathComponent();
                 if (node instanceof ColumnNode) {
                     ColumnNode columnNode = (ColumnNode)node;
-                    if (columnNode.getTableNode().isKindOfTable()) {
-                        a.add(columnNode);
-                    }
+                    a.add(columnNode);
+                }
+            }
+        }
+        return a;
+    }
+
+    private static List<TableNode> collectTableNode(TreePath[] paths) {
+        List<TableNode> a = new ArrayList<TableNode>();
+        if (paths != null) {
+            for (TreePath path : paths) {
+                InfoNode node = (InfoNode)path.getLastPathComponent();
+                if (node instanceof TableNode) {
+                    TableNode columnNode = (TableNode)node;
+                    a.add(columnNode);
                 }
             }
         }
@@ -227,36 +239,47 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
     private void generateInsertStatement() {
         TreePath[] paths = getSelectionPaths();
         List<ColumnNode> columns = collectColumnNode(paths);
-        String[] tableNames = collectTableName(columns);
-        if (tableNames.length == 0) {
-            return;
+        final String tableName;
+        final int tableCount;
+        if (columns.isEmpty()) {
+            List<TableNode> tables = collectTableNode(paths);
+            if (tables.isEmpty()) {
+                return;
+            }
+            TableNode tableNode = tables.get(0);
+            if (tableNode.getChildCount() == 0) {
+                showInformationMessageDialog(this,
+                                             res.get("i.can-only-use-after-tablenode-expanded"),
+                                             "");
+                return;
+            }
+            @SuppressWarnings("unchecked")
+            List<ColumnNode> list = Collections.list(tableNode.children());
+            columns.addAll(list);
+            tableName = tableNode.getNodeFullName();
+            tableCount = tables.size();
+        } else {
+            String[] tableNames = collectTableName(columns);
+            tableCount = tableNames.length;
+            if (tableCount == 0) {
+                return;
+            }
+            tableName = tableNames[0];
         }
-        if (tableNames.length != 1) {
+        if (tableCount != 1) {
             showInformationMessageDialog(this, res.get("e.enables-select-just-1-table"), "");
             return;
         }
-        final String tableName = tableNames[0];
         List<String> columnNames = new ArrayList<String>();
-        final Iterable<ColumnNode> columnNodes;
-        if (columns.isEmpty()) {
-            final TreePath path = paths[0];
-            TableNode tableNode = (TableNode)path.getLastPathComponent();
-            if (tableNode.getChildCount() == 0) {
-                expandPath(path);
-            }
-            @SuppressWarnings("unchecked")
-            Iterable<ColumnNode> it = Collections.list(tableNode.children());
-            columnNodes = it;
-        } else {
-            columnNodes = columns;
-        }
-        for (ColumnNode node : columnNodes) {
+        for (ColumnNode node : columns) {
             columnNames.add(node.getName());
         }
-        insertTextToTextArea(String.format("INSERT INTO %s (%s) VALUES (%s);",
+        final int columnCount = columnNames.size();
+        insertTextToTextArea(String.format("INSERT INTO %s (%s) VALUES (%s);%s",
                                            tableName,
                                            joinByComma(columnNames),
-                                           joinByComma(nCopies(columnNames.size(), "?"))));
+                                           joinByComma(nCopies(columnCount, "?")),
+                                           TextUtilities.join(",", nCopies(columnCount, ""))));
     }
 
     private void jumpToColumnByName() {
