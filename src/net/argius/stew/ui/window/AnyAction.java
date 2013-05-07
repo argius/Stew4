@@ -230,15 +230,8 @@ final class AnyAction extends AbstractAction implements Runnable {
                              Object actionKey,
                              KeyStroke... keyStrokes) {
         final String key = String.valueOf(actionKey);
-        bindAction(src, dst, key, keyStrokes);
+        src.getActionMap().put(key, new AnyAction(dst, key));
         bindKeyStroke(src, whenAncestor, key, keyStrokes);
-    }
-
-    private static void bindAction(JComponent src,
-                                   AnyActionListener dst,
-                                   String actionKeyString,
-                                   KeyStroke... keyStrokes) {
-        src.getActionMap().put(actionKeyString, new AnyAction(dst, actionKeyString));
     }
 
     private static void bindKeyStroke(JComponent src,
