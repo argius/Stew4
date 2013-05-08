@@ -15,45 +15,31 @@ final class ContextMenu {
     private static final Logger log = Logger.getLogger(ContextMenu.class);
     private static final ResourceManager res = ResourceManager.getInstance(ContextMenu.class);
 
-    static JPopupMenu create(final JComponent target, final AnyActionListener dst) {
+    static JPopupMenu create(JComponent target, AnyActionListener dst) {
         return create(target, dst, target.getClass().getSimpleName());
     }
 
-    static JPopupMenu create(final AnyActionListener dst) {
+    static JPopupMenu create(AnyActionListener dst) {
         JComponent c = (dst instanceof JComponent) ? (JComponent)dst : null;
         return create(c, dst, dst.getClass().getSimpleName());
     }
 
-    static JPopupMenu create(final JComponent target, final AnyActionListener dst, String name) {
+    static JPopupMenu create(JComponent target, AnyActionListener dst, String name) {
         log.atEnter("set", dst, name);
-        final JPopupMenu menu = new JPopupMenu();
-        final Map<String, KeyStroke> keyBounds = extractKeyBinds(target);
-        final boolean autoMnemonic = res.getInt("auto-mnemonic") == 1;
+        JPopupMenu menu = new JPopupMenu();
+        Map<String, KeyStroke> keyBounds = extractKeyBinds(target);
         AnyAction aa = new AnyAction(dst);
-        for (final String itemId : res.get(name + ".items").split(",", -1)) {
-            if (itemId.length() == 0) {
+        for (JMenuItem o : Menu.createJMenuItems(res, name)) {
+            if (o == null) {
                 menu.add(new JSeparator());
                 continue;
             }
-            final String id = "item." + itemId;
-            final JMenuItem item = new JMenuItem(itemId);
-            final char mn = res.getChar(id + ".mnemonic");
-            item.setText((res.containsKey(id))
-                    ? res.get(id) + (autoMnemonic ? "(" + mn + ")" : "")
-                    : itemId);
-            item.setMnemonic(mn);
-            item.setActionCommand(itemId);
-            item.addActionListener(aa);
-            final String shortcutId = id + ".shortcut";
-            if (res.containsKey(shortcutId)) {
-                KeyStroke shortcutKey = Utilities.getKeyStroke(res.get(shortcutId));
-                if (shortcutKey != null) {
-                    item.setAccelerator(shortcutKey);
-                }
-            } else if (keyBounds.containsKey(itemId)) {
-                item.setAccelerator(keyBounds.get(itemId));
+            o.addActionListener(aa);
+            final String itemId = o.getActionCommand();
+            if (keyBounds.containsKey(itemId)) {
+                o.setAccelerator(keyBounds.get(itemId));
             }
-            menu.add(item);
+            menu.add(o);
         }
         if (target == null && dst instanceof JComponent) {
             ((JComponent)dst).setComponentPopupMenu(menu);
@@ -82,39 +68,22 @@ final class ContextMenu {
         return m;
     }
 
-    static JPopupMenu createForText(final JTextComponent text) {
+    static JPopupMenu createForText(JTextComponent text) {
         AnyAction aa = new AnyAction(text);
         return createForText(text, aa.setUndoAction());
     }
 
-    static JPopupMenu createForText(final JTextComponent text, UndoManager um) {
-        final JPopupMenu menu = new JPopupMenu();
+    static JPopupMenu createForText(JTextComponent text, UndoManager um) {
+        JPopupMenu menu = new JPopupMenu();
         TextPopupMenuListener textPopupListener = new TextPopupMenuListener(text, um);
-        final boolean autoMnemonic = res.getInt("auto-mnemonic") == 1;
-        final String name = "TextComponent";
-        for (final String itemId : res.get(name + ".items").split(",", -1)) {
-            if (itemId.length() == 0) {
+        for (JMenuItem o : Menu.createJMenuItems(res, "TextComponent")) {
+            if (o == null) {
                 menu.add(new JSeparator());
                 continue;
             }
-            final String id = "item." + itemId;
-            final JMenuItem item = new JMenuItem(itemId);
-            final char mn = res.getChar(id + ".mnemonic");
-            item.setText((res.containsKey(id))
-                    ? res.get(id) + (autoMnemonic ? "(" + mn + ")" : "")
-                    : itemId);
-            item.setMnemonic(mn);
-            item.setActionCommand(itemId);
-            item.addActionListener(textPopupListener);
-            final String shortcutId = id + ".shortcut";
-            if (res.containsKey(shortcutId)) {
-                KeyStroke shortcutKey = Utilities.getKeyStroke(res.get(shortcutId));
-                if (shortcutKey != null) {
-                    item.setAccelerator(shortcutKey);
-                }
-            }
-            menu.add(item);
-            textPopupListener.putPopupMenuItem(itemId, item);
+            menu.add(o);
+            o.addActionListener(textPopupListener);
+            textPopupListener.putPopupMenuItem(o.getActionCommand(), o);
         }
         menu.addPopupMenuListener(textPopupListener);
         text.setComponentPopupMenu(menu);

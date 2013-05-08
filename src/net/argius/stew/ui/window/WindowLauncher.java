@@ -3,7 +3,6 @@ package net.argius.stew.ui.window;
 import static java.awt.event.ActionEvent.ACTION_PERFORMED;
 import static javax.swing.JOptionPane.*;
 import static javax.swing.JSplitPane.VERTICAL_SPLIT;
-import static javax.swing.KeyStroke.getKeyStroke;
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS;
 import static net.argius.stew.ui.window.AnyActionKey.*;
@@ -19,7 +18,6 @@ import java.util.Map.Entry;
 import java.util.List;
 import java.util.Timer;
 import java.util.concurrent.*;
-import java.util.regex.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -28,7 +26,6 @@ import javax.swing.text.*;
 
 import net.argius.stew.*;
 import net.argius.stew.ui.*;
-import net.argius.stew.ui.window.Menu.Item;
 
 /**
  * The Launcher implementation for GUI(Swing).
@@ -607,37 +604,6 @@ public final class WindowLauncher implements
         op.showErrorDialog(th);
     }
 
-    /**
-     * Changes key binds.
-     * @param keyBindInfos key bind infos (info is String value of KeyStroke)
-     */
-    static void changeKeyBinds(List<String> keyBindInfos) {
-        final Pattern p = Pattern.compile("\\s*([^=\\s]+)\\s*=(.*)");
-        List<String> errorInfos = new ArrayList<String>();
-        for (String s : keyBindInfos) {
-            if (s.trim().length() == 0 || s.matches("\\s*#.*")) {
-                continue;
-            }
-            Matcher m = p.matcher(s);
-            if (m.matches()) {
-                try {
-                    Item item = Item.valueOf(m.group(1));
-                    KeyStroke keyStroke = getKeyStroke(m.group(2));
-                    for (WindowLauncher instance : instances) {
-                        instance.menu.setAccelerator(item, keyStroke);
-                    }
-                } catch (Exception ex) {
-                    errorInfos.add(s);
-                }
-            } else {
-                errorInfos.add(s);
-            }
-        }
-        if (!errorInfos.isEmpty()) {
-            throw new IllegalArgumentException(errorInfos.toString());
-        }
-    }
-
     static void invoke() {
         invoke(new WindowLauncher());
     }
@@ -646,24 +612,6 @@ public final class WindowLauncher implements
         final Environment env = new Environment();
         env.setOutputProcessor(new WindowOutputProcessor.Bypass(instance.op));
         instance.launch(env);
-        // applies key binds
-        try {
-            File keyBindConf = new File(Bootstrap.getDirectory(), "keybind.conf");
-            if (keyBindConf.exists()) {
-                List<String> a = new ArrayList<String>();
-                Scanner scanner = new Scanner(keyBindConf);
-                try {
-                    while (scanner.hasNextLine()) {
-                        a.add(scanner.nextLine());
-                    }
-                } finally {
-                    scanner.close();
-                }
-                changeKeyBinds(a);
-            }
-        } catch (Exception ex) {
-            instance.handleError(ex);
-        }
     }
 
     /**
