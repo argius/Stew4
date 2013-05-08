@@ -99,7 +99,9 @@ final class ResultSetTable extends JTable implements AnyActionListener, TextSear
         // key binds
         final int shortcutKey = Utilities.getMenuShortcutKeyMask();
         AnyAction aa = new AnyAction(this);
+        aa.bindSelf(copyWithEscape, getKeyStroke(VK_C, shortcutKey | InputEvent.SHIFT_DOWN_MASK));
         aa.bindSelf(paste, getKeyStroke(VK_V, shortcutKey));
+        aa.bindSelf(clearSelectedCellValue, getKeyStroke(VK_DELETE, 0));
         aa.bindKeyStroke(true, adjustColumnWidth, getKeyStroke(VK_SLASH, shortcutKey));
         aa.bindKeyStroke(false, doNothing, getKeyStroke(VK_ESCAPE, 0));
     }
