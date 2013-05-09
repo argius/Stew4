@@ -15,6 +15,9 @@ final class ContextMenu {
     private static final Logger log = Logger.getLogger(ContextMenu.class);
     private static final ResourceManager res = ResourceManager.getInstance(ContextMenu.class);
 
+    private ContextMenu() {
+    } // forbidden
+
     static JPopupMenu create(JComponent target, AnyActionListener dst) {
         return create(target, dst, target.getClass().getSimpleName());
     }

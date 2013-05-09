@@ -37,6 +37,7 @@ final class WindowOutputProcessor extends JFrame implements OutputProcessor, Any
     private File currentDirectory;
     private String postProcessMode;
 
+    @SuppressWarnings("unused")
     WindowOutputProcessor(WindowLauncher launcher,
                           ResultSetTable resultSetTable,
                           ConsoleTextArea textArea) {
