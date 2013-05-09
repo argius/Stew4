@@ -135,6 +135,11 @@ public final class Environment {
                     log.debug("rollbacked %s (%s)", connector.getId(), conn);
                 } catch (SQLException ex) {
                     log.warn(ex);
+                    Writer w = new StringWriter();
+                    PrintWriter out = new PrintWriter(w);
+                    ex.printStackTrace(out);
+                    outputMessage("e.database", w);
+                    outputMessage("w.error-occurred-on-auto-rollback", ex);
                 }
             }
             try {
