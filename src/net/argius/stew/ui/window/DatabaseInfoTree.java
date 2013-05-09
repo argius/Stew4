@@ -164,35 +164,38 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
         TreePath[] paths = getSelectionPaths();
         List<ColumnNode> columns = collectColumnNode(paths);
         final String columnString;
-        final String tableString;
+        final List<String> tableNames;
         if (columns.isEmpty()) {
             List<TableNode> tableNodes = collectTableNode(paths);
             if (tableNodes.isEmpty()) {
                 return;
             }
+            tableNames = new ArrayList<String>();
+            for (final TableNode tableNode : tableNodes) {
+                tableNames.add(tableNode.getNodeFullName());
+            }
             columnString = "*";
-            tableString = join(",", tableNodes);
         } else {
             List<String> columnNames = new ArrayList<String>();
-            String[] tableNames = collectTableName(columns);
-            final boolean one = tableNames.length == 1;
+            tableNames = collectTableName(columns);
+            final boolean one = tableNames.size() == 1;
             for (ColumnNode node : columns) {
                 columnNames.add(one ? node.getName() : node.getNodeFullName());
             }
             columnString = join(", ", columnNames);
-            tableString = join(",", Arrays.asList(tableNames));
         }
+        final String tableString = join(",", tableNames);
         insertTextToTextArea(String.format("SELECT %s FROM %s WHERE ", columnString, tableString));
     }
 
     private void generateUpdateStatement() {
         TreePath[] paths = getSelectionPaths();
         List<ColumnNode> columns = collectColumnNode(paths);
-        String[] tableNames = collectTableName(columns);
-        if (tableNames.length == 0) {
+        List<String> tableNames = collectTableName(columns);
+        if (tableNames.isEmpty()) {
             return;
         }
-        if (tableNames.length != 1 || columns.isEmpty()) {
+        if (tableNames.size() != 1 || columns.isEmpty()) {
             showInformationMessageDialog(this, res.get("e.enables-select-just-1-table"), "");
             return;
         }
@@ -201,7 +204,7 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
             columnExpressions.add(columnNode.getName() + "=?");
         }
         insertTextToTextArea(String.format("UPDATE %s SET %s WHERE ",
-                                           tableNames[0],
+                                           tableNames.get(0),
                                            join(",", columnExpressions)));
     }
 
@@ -228,12 +231,12 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
             tableName = tableNode.getNodeFullName();
             tableCount = tables.size();
         } else {
-            String[] tableNames = collectTableName(columns);
-            tableCount = tableNames.length;
+            List<String> tableNames = collectTableName(columns);
+            tableCount = tableNames.size();
             if (tableCount == 0) {
                 return;
             }
-            tableName = tableNames[0];
+            tableName = tableNames.get(0);
         }
         if (tableCount != 1) {
             showInformationMessageDialog(this, res.get("e.enables-select-just-1-table"), "");
@@ -295,12 +298,12 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
         return a;
     }
 
-    private static String[] collectTableName(List<ColumnNode> columnNodes) {
+    private static List<String> collectTableName(List<ColumnNode> columnNodes) {
         Set<String> tableNames = new LinkedHashSet<String>();
         for (final ColumnNode node : columnNodes) {
             tableNames.add(node.getTableNode().getNodeFullName());
         }
-        return tableNames.toArray(new String[tableNames.size()]);
+        return new ArrayList<String>(tableNames);
     }
 
     static String generateEquivalentJoinClause(List<ColumnNode> nodes) {
