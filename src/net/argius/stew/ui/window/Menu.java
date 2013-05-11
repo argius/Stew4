@@ -199,7 +199,7 @@ final class Menu extends JMenuBar implements PropertyChangeListener {
 
     private static void refreshAllAccelerators(Map<String, JMenuItem> itemMap) {
         // This method is called everytime menu and popup-menu is created.
-        File keyBindConf = new File(Bootstrap.getDirectory(), "keybind.conf");
+        File keyBindConf = Bootstrap.getSystemFile("keybind.conf");
         if (!keyBindConf.exists()) {
             return;
         }

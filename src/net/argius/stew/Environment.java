@@ -1,6 +1,6 @@
 package net.argius.stew;
 
-import static net.argius.stew.Bootstrap.getDirectory;
+import static net.argius.stew.Bootstrap.getSystemFile;
 
 import java.io.*;
 import java.sql.*;
@@ -12,7 +12,6 @@ import net.argius.stew.ui.*;
  */
 public final class Environment {
 
-    static final String CONNECTOR_PROPERTIES_NAME = "connector.properties";
     static final String ALIAS_PROPERTIES_NAME = "alias.properties";
 
     private static final Logger log = Logger.getLogger(Environment.class);
@@ -24,7 +23,6 @@ public final class Environment {
     private Connection conn;
 
     private int timeoutSeconds;
-    private File systemDirectory;
     private File currentDirectory;
     private long connectorTimestamp;
     private AliasMap aliasMap;
@@ -38,10 +36,9 @@ public final class Environment {
         this.connectorMap = new ConnectorMap();
         loadConnectorMap();
         // init directories
-        this.systemDirectory = getDirectory();
         this.currentDirectory = getInitialCurrentDirectory();
         // init alias
-        final File aliasPropFile = new File(this.systemDirectory, ALIAS_PROPERTIES_NAME);
+        final File aliasPropFile = getSystemFile(ALIAS_PROPERTIES_NAME);
         this.aliasMap = new AliasMap(aliasPropFile);
         if (aliasPropFile.exists()) {
             try {
@@ -60,7 +57,6 @@ public final class Environment {
         // never copy coconnector,conn,op into this
         this.connectorMap = new ConnectorMap(src.connectorMap);
         this.timeoutSeconds = src.timeoutSeconds;
-        this.systemDirectory = src.systemDirectory;
         this.currentDirectory = src.currentDirectory;
     }
 
@@ -78,7 +74,6 @@ public final class Environment {
             connectorMap = null;
             connector = null;
             conn = null;
-            systemDirectory = null;
             currentDirectory = null;
         }
         log.debug("released internal state of Environment");
@@ -186,15 +181,9 @@ public final class Environment {
      * Loads and refreshes connector map.
      */
     public void loadConnectorMap() {
-        File connectorFile = new File(getDirectory(), CONNECTOR_PROPERTIES_NAME);
         ConnectorMap m;
         try {
-            InputStream is = new FileInputStream(connectorFile);
-            try {
-                m = ConnectorConfiguration.load(is);
-            } finally {
-                is.close();
-            }
+            m = ConnectorConfiguration.load();
         } catch (IOException ex) {
             m = new ConnectorMap();
         }
@@ -203,7 +192,7 @@ public final class Environment {
                 connectorMap.clear();
             }
             connectorMap.putAll(m);
-            connectorTimestamp = connectorFile.lastModified();
+            connectorTimestamp = ConnectorConfiguration.lastModified();
         }
     }
 
@@ -213,8 +202,7 @@ public final class Environment {
      * @return whether updated or not
      */
     public boolean updateConnectorMap() {
-        File connectorFile = new File(getDirectory(), CONNECTOR_PROPERTIES_NAME);
-        if (connectorFile.lastModified() > connectorTimestamp) {
+        if (ConnectorConfiguration.lastModified() > connectorTimestamp) {
             loadConnectorMap();
             return true;
         }
@@ -261,8 +249,13 @@ public final class Environment {
         this.currentDirectory = currentDirectory;
     }
 
+    /**
+     * @return system directory
+     * @deprecated use Bootstrap.getSystemDirectory() instead
+     */
+    @Deprecated
     public File getSystemDirectory() {
-        return systemDirectory;
+        return Bootstrap.getSystemDirectory();
     }
 
     public AliasMap getAliasMap() {

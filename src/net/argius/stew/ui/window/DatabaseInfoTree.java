@@ -463,7 +463,7 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
         this.currentConnector = c;
         // auto-expansion
         try {
-            File confFile = new File(Bootstrap.getDirectory(), "autoexpansion.tsv");
+            File confFile = Bootstrap.getSystemFile("autoexpansion.tsv");
             if (confFile.exists() && confFile.length() > 0) {
                 AnyAction aa = new AnyAction(this);
                 Scanner r = new Scanner(confFile);

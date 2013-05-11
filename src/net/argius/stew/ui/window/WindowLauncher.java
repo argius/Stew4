@@ -396,7 +396,7 @@ public final class WindowLauncher implements
     }
 
     private void loadConfiguration() {
-        Configuration cnf = Configuration.load(Bootstrap.getDirectory());
+        Configuration cnf = Configuration.load();
         op.setSize(cnf.getSize());
         op.setLocation(cnf.getLocation());
         split2.setDividerLocation(cnf.getDividerLocation());
@@ -411,7 +411,7 @@ public final class WindowLauncher implements
     }
 
     private void saveConfiguration() {
-        Configuration cnf = Configuration.load(Bootstrap.getDirectory());
+        Configuration cnf = Configuration.load();
         if ((op.getExtendedState() & Frame.MAXIMIZED_BOTH) == 0) {
             // only not maximized
             cnf.setSize(op.getSize());
@@ -435,8 +435,6 @@ public final class WindowLauncher implements
     public static final class Configuration {
 
         private static final Logger log = Logger.getLogger(Configuration.class);
-
-        private transient File directory;
 
         private Dimension size;
         private Point location;
@@ -462,13 +460,9 @@ public final class WindowLauncher implements
             this.postProcessMode = AnyActionKey.postProcessMode.toString();
         }
 
-        void setDirectory(File directory) {
-            this.directory = directory;
-        }
-
         void save() {
-            final File file = getFile(directory);
-            log.debug("save Configuration to: [%s]", file);
+            final File file = getFile();
+            log.debug("save Configuration to: [%s]", file.getAbsolutePath());
             try {
                 XMLEncoder encoder = new XMLEncoder(new FileOutputStream(file));
                 try {
@@ -481,16 +475,14 @@ public final class WindowLauncher implements
             }
         }
 
-        static Configuration load(File directory) {
-            final File file = getFile(directory);
-            log.debug("load Configuration from: [%s]", file);
+        static Configuration load() {
+            final File file = getFile();
+            log.debug("load Configuration from: [%s]", file.getAbsolutePath());
             if (file.exists()) {
                 try {
                     XMLDecoder decoder = new XMLDecoder(new FileInputStream(file));
                     try {
-                        final Configuration instance = (Configuration)decoder.readObject();
-                        instance.setDirectory(directory);
-                        return instance;
+                        return (Configuration)decoder.readObject();
                     } finally {
                         decoder.close();
                     }
@@ -498,14 +490,11 @@ public final class WindowLauncher implements
                     log.warn(ex);
                 }
             }
-            final Configuration instance = new Configuration();
-            instance.setDirectory(directory);
-            return instance;
+            return new Configuration();
         }
 
-        private static File getFile(File systemDirectory) {
-            final File file = new File(systemDirectory, Configuration.class.getName() + ".xml");
-            return file.getAbsoluteFile();
+        private static File getFile() {
+            return Bootstrap.getSystemFile(Configuration.class.getName() + ".xml");
         }
 
         public Dimension getSize() {

@@ -10,6 +10,8 @@ import java.util.regex.*;
  */
 public final class ConnectorConfiguration {
 
+    static final String CONNECTOR_PROPERTIES_NAME = "connector.properties";
+
     private static final Pattern idPattern = Pattern.compile("^([^\\.]+)\\.name *=");
 
     /**
@@ -119,8 +121,12 @@ public final class ConnectorConfiguration {
         }
     }
 
+    public static long lastModified() {
+        return getPath().lastModified();
+    }
+
     private static File getPath() {
-        return new File(Bootstrap.getDirectory(), Environment.CONNECTOR_PROPERTIES_NAME);
+        return Bootstrap.getSystemFile(CONNECTOR_PROPERTIES_NAME);
     }
 
     private static final class ConnectorPropertyComparator implements

@@ -128,8 +128,12 @@ public final class Bootstrap {
      * Returns system directory.
      * @return
      */
-    public static File getDirectory() {
+    public static File getSystemDirectory() {
         return dir;
+    }
+
+    public static File getSystemFile(String name) {
+        return new File(dir, name);
     }
 
     /**

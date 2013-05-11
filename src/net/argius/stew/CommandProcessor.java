@@ -218,8 +218,10 @@ final class CommandProcessor {
         }
         // at
         if (commandName.equals("@")) {
-            op.output(String.format("current dir : %s", env.getCurrentDirectory().getAbsolutePath()));
-            op.output(String.format("system  dir : %s", env.getSystemDirectory().getAbsolutePath()));
+            final String currentDirectory = env.getCurrentDirectory().getAbsolutePath();
+            final String systemDirectory = Bootstrap.getSystemDirectory().getAbsolutePath();
+            op.output(String.format("current dir : %s", currentDirectory));
+            op.output(String.format("system  dir : %s", systemDirectory));
             return true;
         }
         // report -
