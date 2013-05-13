@@ -191,11 +191,11 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
     private void generateUpdateStatement() {
         TreePath[] paths = getSelectionPaths();
         List<ColumnNode> columns = collectColumnNode(paths);
-        List<String> tableNames = collectTableName(columns);
-        if (tableNames.isEmpty()) {
+        if (columns.isEmpty()) {
             return;
         }
-        if (tableNames.size() != 1 || columns.isEmpty()) {
+        List<String> tableNamesOfColumns = collectTableName(columns);
+        if (collectTableNode(paths).size() > 1) {
             showInformationMessageDialog(this, res.get("e.enables-select-just-1-table"), "");
             return;
         }
@@ -204,7 +204,7 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
             columnExpressions.add(columnNode.getName() + "=?");
         }
         insertTextToTextArea(String.format("UPDATE %s SET %s WHERE ",
-                                           tableNames.get(0),
+                                           tableNamesOfColumns.get(0),
                                            join(",", columnExpressions)));
     }
 
