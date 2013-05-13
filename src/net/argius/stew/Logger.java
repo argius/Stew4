@@ -86,10 +86,11 @@ public final class Logger {
         if (log.isLoggable(level)) {
             final String cn = log.getName();
             final String mn = (enteredMethodName == null) ? "(unknown method)" : enteredMethodName;
+            final String msg = (args.length == 0) ? format : String.format(format, args);
             if (th == null) {
-                log.logp(level, cn, mn, String.format(format, args));
+                log.logp(level, cn, mn, msg);
             } else {
-                log.logp(level, cn, mn, String.format(format, args), th);
+                log.logp(level, cn, mn, msg, th);
             }
         }
     }
