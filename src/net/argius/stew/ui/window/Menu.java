@@ -137,6 +137,7 @@ final class Menu extends JMenuBar implements PropertyChangeListener {
             for (MenuElement menuGroup : parent.getSubElements()) {
                 for (MenuElement child : menuGroup.getSubElements()) {
                     JMenuItem o = (JMenuItem)child;
+                    o.addActionListener(aa);
                     itemToCompMap.put(Item.of(o.getActionCommand()), o);
                 }
             }
