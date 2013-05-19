@@ -102,6 +102,7 @@ final class ResultSetTable extends JTable implements AnyActionListener, TextSear
         aa.bindSelf(copyWithEscape, getKeyStroke(VK_C, shortcutKey | InputEvent.SHIFT_DOWN_MASK));
         aa.bindSelf(paste, getKeyStroke(VK_V, shortcutKey));
         aa.bindSelf(clearSelectedCellValue, getKeyStroke(VK_DELETE, 0));
+        aa.bindSelf(deleteRows, getKeyStroke(VK_MINUS, shortcutKey | InputEvent.SHIFT_DOWN_MASK));
         aa.bindKeyStroke(true, adjustColumnWidth, getKeyStroke(VK_SLASH, shortcutKey));
         aa.bindKeyStroke(false, doNothing, getKeyStroke(VK_ESCAPE, 0));
     }
