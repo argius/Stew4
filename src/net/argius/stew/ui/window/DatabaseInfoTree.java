@@ -96,7 +96,7 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
             }
             final String phrase = generateEquivalentJoinClause(columnNodes);
             if (phrase.length() > 0) {
-                insertTextIntoTextArea(phrase);
+                insertTextIntoTextArea(addCommas(phrase));
             }
         } else if (ev.isAnyOf(generateSelectPhrase)) {
             final String phrase = generateSelectPhrase(getSelectionNodes());
@@ -109,7 +109,7 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
                 final String phrase = generateUpdateOrInsertPhrase(getSelectionNodes(), isInsert);
                 if (phrase.length() > 0) {
                     if (isInsert) {
-                        insertTextIntoTextArea(phrase);
+                        insertTextIntoTextArea(addCommas(phrase));
                     } else {
                         insertTextIntoTextArea(phrase + " WHERE ");
                     }
@@ -208,6 +208,19 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
         }
     }
 
+    private static String addCommas(String phrase) {
+        int c = 0;
+        for (final char ch : phrase.toCharArray()) {
+            if (ch == '?') {
+                ++c;
+            }
+        }
+        if (c >= 2) {
+            return String.format("%s;%s", phrase, join(",", nCopies(c, "")));
+        }
+        return phrase;
+    }
+
     static String generateEquivalentJoinClause(List<ColumnNode> nodes) {
         if (nodes.isEmpty()) {
             return "";
@@ -243,7 +256,7 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
             }
             expressions.addAll(expressions2);
         }
-        return String.format("%s;", join(" AND ", expressions));
+        return String.format("%s", join(" AND ", expressions));
     }
 
     static String generateSelectPhrase(List<TreeNode> nodes) {
@@ -338,11 +351,10 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
         final String phrase;
         if (isInsert) {
             final int columnCount = columnsInTable.size();
-            phrase = String.format("INSERT INTO %s (%s) VALUES (%s);%s",
+            phrase = String.format("INSERT INTO %s (%s) VALUES (%s)",
                                    tableName,
                                    join(",", columnsInTable),
-                                   join(",", nCopies(columnCount, "?")),
-                                   join(",", nCopies(columnCount, "")));
+                                   join(",", nCopies(columnCount, "?")));
         } else {
             List<String> columnExpressions = new ArrayList<String>();
             for (final String columnName : columnsInTable) {
