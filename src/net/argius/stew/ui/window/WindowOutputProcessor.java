@@ -1,6 +1,5 @@
 package net.argius.stew.ui.window;
 
-import static java.awt.EventQueue.invokeLater;
 import static javax.swing.JOptionPane.*;
 import static net.argius.stew.Bootstrap.getPropertyAsInt;
 import static net.argius.stew.ui.window.AnyActionKey.*;
@@ -8,6 +7,7 @@ import static net.argius.stew.ui.window.Utilities.getImageIcon;
 import static net.argius.stew.ui.window.Utilities.sleep;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
@@ -29,18 +29,18 @@ final class WindowOutputProcessor extends JFrame implements OutputProcessor, Any
     private static final ResourceManager res = ResourceManager.getInstance(WindowOutputProcessor.class);
 
     private final AnyAction invoker;
-
-    private ResultSetTable resultSetTable;
-    private ConsoleTextArea textArea;
+    private final WindowLauncher launcher;
+    private final ResultSetTable resultSetTable;
+    private final ConsoleTextArea textArea;
 
     private Environment env;
     private File currentDirectory;
     private String postProcessMode;
 
-    @SuppressWarnings("unused")
     WindowOutputProcessor(WindowLauncher launcher,
                           ResultSetTable resultSetTable,
                           ConsoleTextArea textArea) {
+        this.launcher = launcher;
         this.resultSetTable = resultSetTable;
         this.textArea = textArea;
         this.invoker = new AnyAction(this);
@@ -75,6 +75,13 @@ final class WindowOutputProcessor extends JFrame implements OutputProcessor, Any
     @Override
     public void close() {
         dispose();
+    }
+
+    @Override
+    protected void processWindowEvent(WindowEvent e) {
+        if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+            launcher.anyActionPerformed(new AnyActionEvent(this, AnyActionKey.closeWindow));
+        }
     }
 
     @Override
@@ -184,16 +191,9 @@ final class WindowOutputProcessor extends JFrame implements OutputProcessor, Any
     }
 
     void doPostProcess() {
-        final JTextArea textArea = this.textArea;
-        final Runnable focusAction = new Runnable() {
-            @Override
-            public void run() {
-                requestFocus();
-                textArea.requestFocusInWindow();
-            }
-        };
+        final AnyAction aa = new AnyAction(this);
         if (isActive()) {
-            invokeLater(focusAction);
+            aa.doLater("focusWindow", true);
             return;
         }
         final String prefix = getClass().getName() + ".postprocess.";
@@ -204,78 +204,86 @@ final class WindowOutputProcessor extends JFrame implements OutputProcessor, Any
             case postProcessModeNone:
                 break;
             case postProcessModeFocus:
-                invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        toFront();
-                        focusAction.run();
-                    }
-                });
+                aa.doLater("focusWindow", false);
                 break;
             case postProcessModeShake:
-                DaemonThreadFactory.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        final Runnable shakeAction = new Runnable() {
-                            int sign = -1;
-                            @Override
-                            public void run() {
-                                sign *= -1;
-                                setLocation(getX() + range * sign, getY());
-                            }
-                        };
-                        invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                textArea.requestFocusInWindow();
-                            }
-                        });
-                        for (int i = 0, n = count >> 1 << 1; i < n; i++) {
-                            invokeLater(shakeAction);
-                            sleep(interval);
-                        }
-                    }
-                });
+                aa.doParallel("shakeWindow", count, range, interval);
                 break;
             case postProcessModeBlink:
-                DaemonThreadFactory.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        final byte[] alpha = {0};
-                        final JPanel p = new JPanel() {
-                            @Override
-                            protected void paintComponent(Graphics g) {
-                                super.paintComponent(g);
-                                g.setColor(new Color(0, 0xE6, 0x2E, alpha[0] & 0xFF));
-                                g.fillRect(0, 0, getWidth(), getHeight());
-                            }
-                        };
-                        invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                textArea.requestFocusInWindow();
-                                setGlassPane(p);
-                                p.setOpaque(false);
-                                p.setVisible(true);
-                            }
-                        });
-                        for (int i = 0, n = (count / 45 + 1) * 45; i < n; i++) {
-                            alpha[0] = (byte)((Math.sin(i * 0.25f) + 1) * 32 * range);
-                            p.repaint();
-                            sleep(interval);
-                        }
-                        invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                p.setVisible(false);
-                                remove(p);
-                            }
-                        });
-                    }
-                });
+                aa.doParallel("blinkWindow", count, range, interval);
                 break;
             default:
                 log.warn("doPostProcess: postProcessMode=%s", postProcessMode);
+        }
+    }
+
+    void focusWindow(boolean moveToFront) {
+        if (moveToFront) {
+            toFront();
+        }
+        requestFocus();
+        textArea.requestFocusInWindow();
+    }
+
+    void shakeWindow(int count, int range, long interval) {
+        AnyAction aa = new AnyAction(new PostProcessAction());
+        aa.doLater("focusWindow");
+        for (int i = 0, n = count >> 1 << 1; i < n; i++) {
+            aa.doLater("shakeWindow", range);
+            sleep(interval);
+        }
+    }
+
+    void blinkWindow(final int count, final int range, final long interval) {
+        final byte[] alpha = {0};
+        final JPanel p = new PostProcessAction(alpha);
+        AnyAction aa = new AnyAction(new PostProcessAction());
+        aa.doLater("showComponent", p);
+        for (int i = 0, n = (count / 45 + 1) * 45; i < n; i++) {
+            alpha[0] = (byte)((Math.sin(i * 0.25f) + 1) * 32 * range);
+            p.repaint();
+            sleep(interval);
+        }
+        aa.doLater("removeComponent", p);
+    }
+
+    private void requestFocusToTextAreaInWindow() {
+        textArea.requestFocusInWindow();
+    }
+
+    private void moveWindow(int incX, int incY) {
+        setLocation(getX() + incX, getY() + incY);
+    }
+
+    final class PostProcessAction extends JPanel {
+        int sign = -1;
+        byte[] alpha;
+        Frame frame = getRootFrame();
+        PostProcessAction(byte... alpha) {
+            this.alpha = alpha;
+        }
+        void focusWindow() {
+            requestFocusToTextAreaInWindow();
+        }
+        void shakeWindow(int range) {
+            sign *= -1;
+            moveWindow(range * sign, 0);
+        }
+        void showComponent(JComponent c) {
+            requestFocusToTextAreaInWindow();
+            setGlassPane(c);
+            c.setOpaque(false);
+            c.setVisible(true);
+        }
+        void removeComponent(JComponent c) {
+            c.setVisible(false);
+            remove(c);
+        }
+        @Override
+        public void paintComponent(Graphics g) {
+            super.paintComponents(g);
+            g.setColor(new Color(0, 0xE6, 0x2E, alpha[0] & 0xFF));
+            g.fillRect(0, 0, getWidth(), getHeight());
         }
     }
 

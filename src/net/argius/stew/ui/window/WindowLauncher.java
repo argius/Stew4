@@ -181,12 +181,6 @@ public final class WindowLauncher implements
         // XXX cannot restore config of status-bar at following code
         // statusBar.removePropertyChangeListener(menu);
         // [Events]
-        op.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                requestClose();
-            }
-        });
         ContextMenu.create(infoTree, infoTree);
         ContextMenu.create(resultSetTable);
         ContextMenu.create(resultSetTable.getRowHeader(), resultSetTable, "ResultSetTable");
