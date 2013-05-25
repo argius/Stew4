@@ -211,9 +211,6 @@ final class Menu extends JMenuBar implements PropertyChangeListener {
                 final Pattern p = Pattern.compile("\\s*([^=\\s]+)\\s*=(.*)");
                 while (r.hasNextLine()) {
                     final String line = r.nextLine();
-                    if (line == null) {
-                        break;
-                    }
                     if (line.trim().length() == 0 || line.matches("\\s*#.*")) {
                         continue;
                     }
