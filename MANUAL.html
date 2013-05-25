@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Stew4 User Manual</title>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="markdown.css">
+</head>
+<body>
+<header>
+<h1 class="title">Stew4 User Manual</h1>
+<h3 class="date">version 4.0</h3>
+</header>
+<nav id="TOC">
+<ul>
+<li><a href="#what-is-stew">What Is Stew ?</a></li>
+<li><a href="#precautions">PRECAUTIONS</a><ul>
+<li><a href="#password-management">Password Management</a></li>
+<li><a href="#rollback-does-not-work-when-the-connection-is-disconnecting">Rollback Does Not Work When The Connection Is Disconnecting</a></li>
+<li><a href="#other">Other</a></li>
+</ul></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#running-app">Running App</a></li>
+<li><a href="#uninstallation">Uninstallation</a></li>
+<li><a href="#usage">Usage</a><ul>
+<li><a href="#configuration-of-connector">Configuration Of &quot;Connector&quot;</a></li>
+<li><a href="#about-password-management">About Password Management</a></li>
+<li><a href="#anonymous-connector">Anonymous Connector</a></li>
+<li><a href="#interactive-mode">Interactive Mode</a></li>
+<li><a href="#non-interactive-mode">Non-interactive Mode</a></li>
+<li><a href="#alias">Alias</a></li>
+</ul></li>
+<li><a href="#commands">Commands</a><ul>
+<li><a href="#connect---connects-to-database-built-in">connect - Connects to database (built-in)</a></li>
+<li><a href="#disconnect---disconnects-from-database-built-in">disconnect - Disconnects from database (built-in)</a></li>
+<li><a href="#commit---commits-current-transaction-built-in">commit - Commits current transaction (built-in)</a></li>
+<li><a href="#rollback---rollbacks-current-transaction-built-in">rollback - Rollbacks current transaction (built-in)</a></li>
+<li><a href="#e---evaluates-multiple-commands-built-in">-e - Evaluates multiple commands (built-in)</a></li>
+<li><a href="#f---executes-file-content-as-command-built-in">-f - Executes file content as command (built-in)</a></li>
+<li><a href="#s---executes-file-content-as-script-built-in">-s - Executes file content as script (built-in)</a></li>
+<li><a href="#cd---changes-current-directory-built-in">cd - Changes current directory (built-in)</a></li>
+<li><a href="#displays-directories-built-in">@ - Displays directories (built-in)</a></li>
+<li><a href="#alias---registers-alias-built-in">alias - Registers alias (built-in)</a></li>
+<li><a href="#unalias---removes-alias-built-in">unalias - Removes alias (built-in)</a></li>
+<li><a href="#exit---exits-application-built-in">exit - Exits application (built-in)</a></li>
+<li><a href="#load---executes-file-content-as-sql">load - Executes file content as SQL</a></li>
+<li><a href="#import---imports-from-file">import - Imports from file</a></li>
+<li><a href="#export---exports-to-file">export - Exports to file</a></li>
+<li><a href="#time---measures-time-to-execute-sql">time - Measures time to execute SQL</a></li>
+<li><a href="#find---finds-table-names">find - Finds table names</a></li>
+<li><a href="#report---reports-database-info">report - Reports database info</a></li>
+<li><a href="#download---downloads-a-column-as-file">download - Downloads a column as file</a></li>
+<li><a href="#upload---uploads-file-data-to-a-column">upload - Uploads file data to a column</a></li>
+<li><a href="#wait---waits-for-specified-interval">wait - Waits for specified interval</a></li>
+</ul></li>
+<li><a href="#the-gui-mode">The GUI Mode</a><ul>
+<li><a href="#common-behaviors">Common Behaviors</a></li>
+<li><a href="#main-window">Main Window</a></li>
+<li><a href="#inputoutput-area">Input/Output Area</a></li>
+<li><a href="#result-set-table">Result Set Table</a></li>
+<li><a href="#database-info-tree">Database Info Tree</a></li>
+<li><a href="#main-menu">Main Menu</a></li>
+<li><a href="#status-bar">Status Bar</a></li>
+<li><a href="#saving-configuration">Saving Configuration</a></li>
+<li><a href="#key-binding">Key Binding</a></li>
+</ul></li>
+<li><a href="#menus-in-the-gui-mode">Menus in the GUI Mode</a><ul>
+<li><a href="#file---new-window-n-ctrl-n">File - New Window (N) Ctrl-N</a></li>
+<li><a href="#file---close-window-c-ctrl-w">File - Close Window (C) Ctrl-W</a></li>
+<li><a href="#file---quit-q-ctrl-q">File - Quit (Q) Ctrl-Q</a></li>
+<li><a href="#edit---cut-t-ctrl-x">Edit - Cut (T) Ctrl-X</a></li>
+<li><a href="#edit---copy-c-ctrl-c">Edit - Copy (C) Ctrl-C</a></li>
+<li><a href="#edit---paste-p-ctrl-v">Edit - Paste (P) Ctrl-V</a></li>
+<li><a href="#edit---select-all-a-ctrl-a">Edit - Select All (A) Ctrl-A</a></li>
+<li><a href="#edit---find-f-ctrl-f">Edit - Find (F) Ctrl-F</a></li>
+<li><a href="#edit---toggle-focus-g-ctrl-g">Edit - Toggle focus (G) Ctrl-G</a></li>
+<li><a href="#edit---clear-message-m">Edit - Clear Message (M)</a></li>
+<li><a href="#view---show-status-bar-s">View - Show Status Bar (S)</a></li>
+<li><a href="#view---show-column-number-c">View - Show Column Number (C)</a></li>
+<li><a href="#view---show-info-tree-i">View - Show Info Tree (I)</a></li>
+<li><a href="#view---always-on-top-t">View - Always On Top (T)</a></li>
+<li><a href="#view---refresh-r-f5">View - Refresh (R) F5</a></li>
+<li><a href="#view---widen-column-width-w-ctrl-.period">View - Widen Column Width (W) Ctrl-.(period)</a></li>
+<li><a href="#view---narrow-column-width-n-ctrl-comma">View - Narrow Column Width (N) Ctrl-,(comma)</a></li>
+<li><a href="#view---adjust-column-width-a-ctrl-slash">View - Adjust Column Width (A) Ctrl-/(slash)</a></li>
+<li><a href="#view---auto-adjust-mode-m">View - Auto Adjust Mode (M)</a></li>
+<li><a href="#command---execute-x-ctrl-m">Command - Execute (X) Ctrl-M</a></li>
+<li><a href="#command---break-b-ctrl-pausebreak">Command - BREAK (B) Ctrl-Pause(Break)</a></li>
+<li><a href="#command---history-back-p-ctrl-up">Command - History Back (P) Ctrl-Up</a></li>
+<li><a href="#command---history-next-n-ctrl-down">Command - History Next (N) Ctrl-Down</a></li>
+<li><a href="#command---rollback-r">Command - Rollback (R)</a></li>
+<li><a href="#command---commit-m">Command - Commit (M)</a></li>
+<li><a href="#command---connect-c-ctrl-e">Command - Connect (C) Ctrl-E</a></li>
+<li><a href="#command---disconnect-d-ctrl-d">Command - Disconnect (D) Ctrl-D</a></li>
+<li><a href="#command---post-proccess-0">Command - Post-Proccess (0)</a></li>
+<li><a href="#command---encryption-key-k">Command - Encryption Key (K)</a></li>
+<li><a href="#command---edit-connectors-e">Command - Edit Connectors (E)</a></li>
+<li><a href="#data---sort-s-alt-s">Data - Sort (S) Alt-S</a></li>
+<li><a href="#data---import-file-i">Data - Import File (I)</a></li>
+<li><a href="#data---export-file-e-ctrl-shift-s">Data - Export File (E) Ctrl-Shift-S</a></li>
+<li><a href="#help---show-help">Help - Show Help</a></li>
+<li><a href="#help---about-stew">Help - About Stew</a></li>
+</ul></li>
+<li><a href="#properties">Properties</a><ul>
+<li><a href="#net.argius.stew.properties---location-of-properties-file">net.argius.stew.properties - Location Of Properties File</a></li>
+<li><a href="#net.argius.stew.directory---working-directory">net.argius.stew.directory - Working Directory</a></li>
+<li><a href="#net.argius.stew.query.timeout---query-timeout">net.argius.stew.query.timeout - Query Timeout</a></li>
+<li><a href="#net.argius.stew.rowcount.limit---limit-of-display-result-row-count">net.argius.stew.rowcount.limit - Limit Of Display Result Row Count</a></li>
+<li><a href="#net.argius.stew.command.import.batch.limit---limit-of-import-command-using-batch">net.argius.stew.command.Import.batch.limit - Limit Of Import Command Using Batch</a></li>
+<li><a href="#net.argius.stew.ui.window.resident---regident">net.argius.stew.ui.window.resident - Regident</a></li>
+<li><a href="#logger-configurations">Logger Configurations</a></li>
+</ul></li>
+</ul>
+</nav>
+<h2 id="what-is-stew"><a href="#TOC">What Is Stew ?</a></h2>
+<p>...</p>
+<h2 id="precautions"><a href="#TOC">PRECAUTIONS</a></h2>
+<h3 id="password-management"><a href="#TOC">Password Management</a></h3>
+<p>...</p>
+<p>For details, see <a href="#Connector-Settings">How To Use - Connector Settings</a>.</p>
+<h3 id="rollback-does-not-work-when-the-connection-is-disconnecting"><a href="#TOC">Rollback Does Not Work When The Connection Is Disconnecting</a></h3>
+<p>...</p>
+<p>For details, see <a href="#Connector-Settings">How To Use - Connector Settings</a>.</p>
+<h3 id="other"><a href="#TOC">Other</a></h3>
+<p>For more information, see the project site. <a href="http://stew.sourceforge.jp/"><code class="url">http://stew.sourceforge.jp/</code></a></p>
+<h2 id="installation"><a href="#TOC">Installation</a></h2>
+<p>...</p>
+<h2 id="running-app"><a href="#TOC">Running App</a></h2>
+<p>If you want to use GUI mode, execute the following command:</p>
+<pre><code>&gt; java -jar stew.jar --gui</code></pre>
+<p>If you want to use CUI mode, execute the following command:</p>
+<pre><code>&gt; java -jar stew.jar --cui</code></pre>
+<p>At first time, a system directory &quot;.stew&quot; created. It is used by some configurations. By default, &quot;.stew&quot; creates at the current directory.</p>
+<h2 id="uninstallation"><a href="#TOC">Uninstallation</a></h2>
+<p>Remove all of installed files and &quot;.stew&quot; directory.</p>
+<hr>
+<h2 id="usage"><a href="#TOC">Usage</a></h2>
+<p>To access database with Stew, you need DBMS that supports JDBC and its JDBC driver. For details, see the manual of DBMS.</p>
+<h3 id="configuration-of-connector"><a href="#TOC">Configuration Of &quot;Connector&quot;</a></h3>
+<p>In Stew, an asset of JDBC Connection called it &quot;Connector&quot;.</p>
+<p>In CUI mode, to start edit tool, specifies --edit option.</p>
+<pre><code># command line
+$ stew --edit
+# running stew
+&gt; --edit</code></pre>
+<p>In GUI mode, executes &quot;Edit Connectors&quot; to start edit dialog.</p>
+<p>Connector has the following properties:</p>
+<dl>
+<dt>Connector ID</dt>
+<dd><p>ID for connector command. Allows only ASCII letters (A-Za-z0-9).</p>
+</dd>
+<dt>Connector Name</dt>
+<dd><p>The name to display at Prompt.</p>
+</dd>
+<dt>Classpath</dt>
+<dd><p>Specifies classpath of JDBC driver. This form is same with -CLASSPATH option.</p>
+</dd>
+<dt>Driver</dt>
+<dd><p>Specifies the driver class that implements java.sql.Driver. (In GUI mode, you can use the &quot;search Driver&quot; button.)</p>
+</dd>
+<dt>URL to connect</dt>
+<dd><p>Specifies JDBC URL (same as url at DriverManager.getConnection(url)).</p>
+</dd>
+<dt>User</dt>
+<dd><p>Specifies the user ID.</p>
+</dd>
+<dt>Password</dt>
+<dd><p>Specifies the password of its user ID.</p>
+</dd>
+<dt>Encryption</dt>
+<dd><p>Specifies the type to save password into file. See the next section.</p>
+</dd>
+<dt>Readonly</dt>
+<dd>Is set to READONLY the connection, so that you can not run the commands that update.
+</dd>
+</dl>
+<p>(., Which according to ReadOnly the command side)</p>
+<dl>
+<dt>Auto Rollback</dt>
+<dd>If it was set, the transaction will be rollbacked automatically when disconnect.
+</dd>
+</dl>
+<h3 id="about-password-management"><a href="#TOC">About Password Management</a></h3>
+<p>How to save the password, you can select the encryption process.</p>
+<dl>
+<dt>PlainTextPassword</dt>
+<dd><p>Saves as plain text. (default)</p>
+</dd>
+<dt>PbePassword</dt>
+<dd><p>You can store your password by using the PBE encryption.</p>
+</dd>
+</dl>
+<h3 id="anonymous-connector"><a href="#TOC">Anonymous Connector</a></h3>
+<h3 id="interactive-mode"><a href="#TOC">Interactive Mode</a></h3>
+<h3 id="non-interactive-mode"><a href="#TOC">Non-interactive Mode</a></h3>
+<h3 id="alias"><a href="#TOC">Alias</a></h3>
+<h2 id="commands"><a href="#TOC">Commands</a></h2>
+<h3 id="connect---connects-to-database-built-in"><a href="#TOC">connect - Connects to database (built-in)</a></h3>
+<pre><code>&gt; connect &lt;connector-id&gt;
+&gt; -c &lt;connector-id&gt;</code></pre>
+<p>This command connects to database with prepared Connector.</p>
+<p>In interactive mode, connection is kept until disconnect. If already connected, disconnect it first, then connect.</p>
+<h3 id="disconnect---disconnects-from-database-built-in"><a href="#TOC">disconnect - Disconnects from database (built-in)</a></h3>
+<pre><code>&gt; disconnect
+&gt; -d</code></pre>
+<p>This command disconnects from database.</p>
+<p>If auto-rollback was available, try to rollback before disconnecting.</p>
+<h3 id="commit---commits-current-transaction-built-in"><a href="#TOC">commit - Commits current transaction (built-in)</a></h3>
+<p>This command commits current transaction.</p>
+<p>** caution: Commit cannot cancel. Please use carefully. **</p>
+<h3 id="rollback---rollbacks-current-transaction-built-in"><a href="#TOC">rollback - Rollbacks current transaction (built-in)</a></h3>
+<p>This command rollbacks a current transaction.</p>
+<h3 id="e---evaluates-multiple-commands-built-in"><a href="#TOC">-e - Evaluates multiple commands (built-in)</a></h3>
+<pre><code>&gt; -e &lt;command&gt; -e &lt;command&gt; ...</code></pre>
+<p>For example, you can execute two export command continuously, or can execute as batch in non-interactive mode.</p>
+<h3 id="f---executes-file-content-as-command-built-in"><a href="#TOC">-f - Executes file content as command (built-in)</a></h3>
+<pre><code>&gt; -f &lt;file&gt;</code></pre>
+<p>...</p>
+<h3 id="s---executes-file-content-as-script-built-in"><a href="#TOC">-s - Executes file content as script (built-in)</a></h3>
+<pre><code>&gt; -s &lt;file&gt;</code></pre>
+<p>( default=JavaScript )</p>
+<p>The following variables will be available in the script:</p>
+<ul>
+<li>object of current connection: connection, conn</li>
+<li>object of Parameter: parameter, p</li>
+<li>object of OutputProcessor: outputProcessor, op</li>
+</ul>
+<h3 id="cd---changes-current-directory-built-in"><a href="#TOC">cd - Changes current directory (built-in)</a></h3>
+<pre><code>&gt; cd &lt;directory&gt;</code></pre>
+<p>Changes current directory to specified one. (This current directory is not OS's, but internal Stew.)</p>
+<h3 id="displays-directories-built-in"><a href="#TOC">@ - Displays directories (built-in)</a></h3>
+<pre><code>&gt; @</code></pre>
+<p>Displays the paths of current directory and system directory.</p>
+<h3 id="alias---registers-alias-built-in"><a href="#TOC">alias - Registers alias (built-in)</a></h3>
+<pre><code>&gt; alias [&lt;name&gt; [&lt;command&gt;]]</code></pre>
+<p>Registers the alias of command. When called with an argument, display the alias and its command. When called without arguments, display all aliases.</p>
+<p>Before registering or displaying, refreshes cached info in memory. If modified aliases in another process, includes you directly edit the config file, run this command.</p>
+<p>(implementation details: for the infinite loop suppression of circular references, the depth of the expansion up to 100.)</p>
+<pre><code>&gt; alias
+No aliases.
+&gt; alias search select * from
+&gt; alias count select count(*) from
+&gt; alias search
+alias search=[select * from]
+&gt; search table1
+&gt;&gt; select * from table1
+(diplays the results of &quot;select * from table1&quot;)
+&gt;</code></pre>
+<h3 id="unalias---removes-alias-built-in"><a href="#TOC">unalias - Removes alias (built-in)</a></h3>
+<pre><code>&gt; unalias &lt;alias&gt;</code></pre>
+<p>If the specified alias does not exist, does nothing. Whether the target exists or not, refreshes cached info in memory.</p>
+<h3 id="exit---exits-application-built-in"><a href="#TOC">exit - Exits application (built-in)</a></h3>
+<pre><code>&gt; exit</code></pre>
+<p>This command exits Stew without confirmation.</p>
+<p>All connections will be disconnected automatically. Rollback will do only the connector set auto-rollback option. For automatic rollback, see <a href="#configuration-of-connector">Usage - Configuration Of &quot;Connector&quot;</a>.</p>
+<h3 id="load---executes-file-content-as-sql"><a href="#TOC">load - Executes file content as SQL</a></h3>
+<pre><code>&gt; load [&lt;SQL-file&gt; | &lt;data-file&gt; &lt;table-name&gt; [ HEADER ]]</code></pre>
+<p>This command executes the SQL read from specified file.</p>
+<p>When If a parameter is specified, executes file content as SQL, otherwise, two or more parameters, imports the file as data file. The file format is automatically selected by file extension. *. .csv : CSV format *. .xml : XML format (definition: src/net/argius/stew/io/stew-table.dtd) *. otherwise: TSV format</p>
+<p>(implementation detail: this is basically same as import command, executes as not batch but executes by record)</p>
+<h3 id="import---imports-from-file"><a href="#TOC">import - Imports from file</a></h3>
+<pre><code>import &lt;data-file&gt; &lt;table-name&gt; [ HEADER ]</code></pre>
+<p>This command imports from file as data file. The file format is automatically selected by file extension. *. .csv : CSV format *. .xml : XML format (definition: src/net/argius/stew/io/stew-table.dtd) *. otherwise: TSV format</p>
+<p>(implementation detail: this is basically same as load command, but uses Statement#addBatch.)</p>
+<h3 id="export---exports-to-file"><a href="#TOC">export - Exports to file</a></h3>
+<p>This command exports result of command to the specified file. The file format is automatically selected by file extension. *. .htm,html : HTML format *. .csv : CSV format *. .xml : XML format (definition: src/net/argius/stew/io/stew-table.dtd) *. others: TSV format</p>
+<h3 id="time---measures-time-to-execute-sql"><a href="#TOC">time - Measures time to execute SQL</a></h3>
+<pre><code>&gt; time [&lt;count&gt;] &lt;SQL&gt;</code></pre>
+<p>This command executes specified SQL and measures its execution time.</p>
+<p>If specified count, executes SQL by count continuously and summaries &quot;Total&quot;, &quot;Ave(average)&quot;, &quot;Max&quot; and &quot;Min&quot;. Otherwise, executes once and measure its execution time.</p>
+<pre><code>&gt; time select * from EMPLOYEE
+execution time: 0.093 seconds
+&gt; time 100 select * from EMPLOYEE
+Total: 0.484 seconds
+  Ave: 0.005 seconds
+  Max: 0.094 seconds
+  Min: 0.000 seconds
+&gt;</code></pre>
+<h3 id="find---finds-table-names"><a href="#TOC">find - Finds table names</a></h3>
+<pre><code>&gt; find &lt;table-name-pattern&gt; [&lt;table-type-pattern&gt; [&lt;schema-pattern&gt; [&lt;catalog-pattern&gt; [ FULL ]]]]</code></pre>
+<p>This command displays list of tables allowed to show. The parameter including &quot;pattern&quot; in its name can be specified wildcard (#,?).</p>
+<h3 id="report---reports-database-info"><a href="#TOC">report - Reports database info</a></h3>
+<pre><code>&gt; report - | &lt;table-name&gt; [ FULL | PK | INDEX ]</code></pre>
+<p>This command displays the info about current connection and connecting database.</p>
+<p>If specifies - (hyphen), displays the name and version of database and JDBC driver, user and JDBC address.</p>
+<p>If only specifies table name, displays the column info about specified table.</p>
+<p>If specifies table name and option, displays the primary key or index info about specified table.</p>
+<h3 id="download---downloads-a-column-as-file"><a href="#TOC">download - Downloads a column as file</a></h3>
+<pre><code>&gt; download &lt;root-dir&gt; SELECT &lt;data-column&gt; [, file-path...] FROM ...</code></pre>
+<p>This command downloads a column data by rows and saves to file.</p>
+<p>For any data type. It is useful for downloading large text data or large objects (BLOB, CLOB) all at once.</p>
+<p>In order to be able to download multiple files, generates file name using column data.</p>
+<p>The file name will be generated by concatenate second column and after as string. This supporses to specify primary keys and file extension.</p>
+<pre><code>&gt; download emp select FULL_NAME, JOB_COUNTRY, &#39;/&#39;, EMP_NO, &#39;.txt&#39; from EMPLOYEE
+The dir[./emp/USA] was created.
+Downloaded. (size=14bytes, file=./emp/USA/2.txt)
+Downloaded. (size=12bytes, file=./emp/USA/4.txt)
+ .
+ .
+ .
+Downloaded. (size=12bytes, file=./emp/USA/24.txt)
+The dir[./emp/England] was created.
+Downloaded. (size=11bytes, file=./emp/England/28.txt)
+ .
+ .
+ .
+Downloaded. (size=18bytes, file=./emp/USA/145.txt)
+Selected 42 records.</code></pre>
+<p>When data exist a record, specified <data-column>, saves file to <root-dir> as file name.</p>
+<p>Saving file already exists or no permission to write file, the process will abort immediately.</p>
+<h3 id="upload---uploads-file-data-to-a-column"><a href="#TOC">upload - Uploads file data to a column</a></h3>
+<pre><code>&gt; upload &lt;file&gt; &lt;SQL(UPDATE|INSERT)&gt;</code></pre>
+<p>This command registers a data file to the column that specified by place-holder.</p>
+<h3 id="wait---waits-for-specified-interval"><a href="#TOC">wait - Waits for specified interval</a></h3>
+<pre><code>&gt; wait seconds()</code></pre>
+<p>This command waits for the interval that specified number of seconds. It may be useful for executing multiple commands.</p>
+<h2 id="the-gui-mode"><a href="#TOC">The GUI Mode</a></h2>
+<h3 id="common-behaviors"><a href="#TOC">Common Behaviors</a></h3>
+<p>Standard commands, &quot;undo&quot;, &quot;redo&quot;, &quot;cut&quot;, &quot;copy&quot;, &quot;paste&quot;, and &quot;select all&quot;, can use in all text components via context menu or shortcut key.</p>
+<h3 id="main-window"><a href="#TOC">Main Window</a></h3>
+<p>A window has &quot;Input/Output Area&quot;, &quot;Result Set Table&quot;, &quot;Database Info Tree&quot;, &quot;Main Menu&quot;, &quot;Status Bar&quot; and &quot;Find Pane&quot;. By default, the database info tree, the status bar and the find pane&quot; are hidden.</p>
+<h3 id="inputoutput-area"><a href="#TOC">Input/Output Area</a></h3>
+<p>The I/O area is similar to CUI interface.</p>
+<p>... When cursor is at the end of textarea, executes command which is string from prompt to the end of textarea. ... Otherwise, move cursor to the end of textarea. ... The part before prompt can't edit.</p>
+<p>... Context menus for this component has the standard commands.</p>
+<h3 id="result-set-table"><a href="#TOC">Result Set Table</a></h3>
+<p>The result set table displays command results, usually query results from database.</p>
+<p>The row header (the leftmost of the table) displays the row number. ... display &quot;+&quot; sign instead of the row number in the row header.</p>
+<p>Automatic column width adjustment ...</p>
+<p>The context menu for this component are listed below:</p>
+<dl>
+<dt>Sorts clicked column</dt>
+<dd><p>This command sorts clicked column, not a selected one. The same column is sorted continuously, ... reverse.</p>
+</dd>
+<dt>Copy (Ctrl-C)</dt>
+<dd><p>This command copies selected cell values as text into the clipboard.</p>
+</dd>
+<dt>Copy With Escape (Ctrl+Shift-C)</dt>
+<dd><p>This command copies selected cell values as quoted strings into the clipboard.</p>
+</dd>
+<dt>Paste (Ctrl-V)</dt>
+<dd><p>This command pastes values into selected cells from the clipboard. Type conversion from the text to column types of the cells depends on each JDBC driver implementation.</p>
+</dd>
+<dt>Select All (Ctrl-A)</dt>
+<dd><p>This command selects all cells in the table.</p>
+</dd>
+<dt>Clear Selected Cell Value</dt>
+<dd><p>This command clears selected cell values (actually sets NULL).</p>
+</dd>
+<dt>Set Current Time Value</dt>
+<dd><p>This command sets current time (Timestamp) into selected cells.</p>
+</dd>
+<dt>Copy Column Names</dt>
+<dd><p>This command copies the table header as text into the clipboard.</p>
+</dd>
+<dt>Find Column Name</dt>
+<dd><p>This command shows the find pane and sets find target ...</p>
+</dd>
+<dt>Add New (Empty) Row</dt>
+<dd><p>This command adds a new empty row into the table.</p>
+</dd>
+<dt>Insert From Clipboard</dt>
+<dd><p>This command ... imports data from the clipboard and inserts the data into the linking table.</p>
+</dd>
+<dt>Duplicate Rows</dt>
+<dd><p>This command adds duplicate rows ... selected cells.</p>
+</dd>
+<dt>Link Rows Into Database</dt>
+<dd><p>This command make unlink ...</p>
+</dd>
+<dt>Delete Rows</dt>
+<dd><p>This command deletes selected rows. The deleted rows are also deleted from database.</p>
+</dd>
+</dl>
+<h3 id="database-info-tree"><a href="#TOC">Database Info Tree</a></h3>
+<p>The database info tree is a tree view of hierarchical structure, which consists catalogs, schemas, tables, table type and columns as a tree. Not connected: blank ... just connected: connector as a root node and sub nodes ... Each node expands ...</p>
+<p>The context menu for this component are listed below:</p>
+<dl>
+<dt>Copy</dt>
+<dd><p>This command copies displayed strings of selected nodes as text into the clipboard.</p>
+</dd>
+<dt>Copy Simple Name</dt>
+<dd><p>This command copies the simple name of selected nodes as text into the clipboard.</p>
+</dd>
+<dt>Copy Full Name</dt>
+<dd><p>This command copies the full qualified name of selected nodes as text into the clipboard.</p>
+</dd>
+<dt>Refresh</dt>
+<dd><p>This command ...</p>
+</dd>
+<dt>Generate WHERE Phrase</dt>
+<dd><p>This command generates a WHERE phrase consisting selected tables and columns ... selected same name, generate ...</p>
+</dd>
+<dt>Generate SELECT Statement (with WHERE)</dt>
+<dd><p>This command generates a SELECT statement with &quot;WHERE&quot; keyword.</p>
+</dd>
+<dt>Generate UPDATE Statement (with WHERE)</dt>
+<dd><p>This command ...</p>
+</dd>
+<dt>Generate INSERT Statement</dt>
+<dd><p>This command ...</p>
+</dd>
+<dt>Jump To Column By Name</dt>
+<dd><p>This command ... the name of selected node. Jump to the column which has the same name in current result table if found it. Double-clicking the node is the same as this command.</p>
+</dd>
+<dt>Toggle Show Column Number</dt>
+<dd><p>This command provides the toggle between showing and hiding the column number of all columns nodes.</p>
+</dd>
+</dl>
+<h3 id="main-menu"><a href="#TOC">Main Menu</a></h3>
+<p>See Menus ...</p>
+<h3 id="status-bar"><a href="#TOC">Status Bar</a></h3>
+<p>... Display last command and its execution time. ...This time is not query but command.</p>
+<h3 id="saving-configuration"><a href="#TOC">Saving Configuration</a></h3>
+<p>...</p>
+<h3 id="key-binding"><a href="#TOC">Key Binding</a></h3>
+<p>... It is not able to change key bind after opening new window. ... For the keywords, see https://github.com/argius/Stew4/blob/master/src/net/argius/stew/ui/window/Menu.u8p</p>
+<h2 id="menus-in-the-gui-mode"><a href="#TOC">Menus in the GUI Mode</a></h2>
+<h3 id="file---new-window-n-ctrl-n"><a href="#TOC">File - New Window (N) Ctrl-N</a></h3>
+<p>This command opens a new window. Current connections are independent of each window.</p>
+<h3 id="file---close-window-c-ctrl-w"><a href="#TOC">File - Close Window (C) Ctrl-W</a></h3>
+<p>This command closes current window. If connected, show confirm dialog.</p>
+<p>If current window is only a window, processes as Quit(Q).</p>
+<h3 id="file---quit-q-ctrl-q"><a href="#TOC">File - Quit (Q) Ctrl-Q</a></h3>
+<p>This command quits this application. When executed, shows confirm dialog. Click &quot;Yes&quot; to quit.</p>
+<h3 id="edit---cut-t-ctrl-x"><a href="#TOC">Edit - Cut (T) Ctrl-X</a></h3>
+<p>This command cuts the selection to the clipboard.</p>
+<h3 id="edit---copy-c-ctrl-c"><a href="#TOC">Edit - Copy (C) Ctrl-C</a></h3>
+<p>This command copies the selection to the clipboard.</p>
+<h3 id="edit---paste-p-ctrl-v"><a href="#TOC">Edit - Paste (P) Ctrl-V</a></h3>
+<p>This command pastes the selection to the clipboard.</p>
+<h3 id="edit---select-all-a-ctrl-a"><a href="#TOC">Edit - Select All (A) Ctrl-A</a></h3>
+<p>This command selects all text or all elements.</p>
+<h3 id="edit---find-f-ctrl-f"><a href="#TOC">Edit - Find (F) Ctrl-F</a></h3>
+<p>This command finds out a specific string from selected component.</p>
+<p>...</p>
+<h3 id="edit---toggle-focus-g-ctrl-g"><a href="#TOC">Edit - Toggle focus (G) Ctrl-G</a></h3>
+<p>This command toggles focus between the result set table and the input/output area in a current window.</p>
+<h3 id="edit---clear-message-m"><a href="#TOC">Edit - Clear Message (M)</a></h3>
+<p>This command clears input/output area in a current window.</p>
+<h3 id="view---show-status-bar-s"><a href="#TOC">View - Show Status Bar (S)</a></h3>
+<p>This command toggles the visibility of status bar in a current window.</p>
+<h3 id="view---show-column-number-c"><a href="#TOC">View - Show Column Number (C)</a></h3>
+<p>This command toggles the visibility of column number in the result set table of a current window.</p>
+<h3 id="view---show-info-tree-i"><a href="#TOC">View - Show Info Tree (I)</a></h3>
+<p>This command toggles the visibility of database info tree in a current window.</p>
+<h3 id="view---always-on-top-t"><a href="#TOC">View - Always On Top (T)</a></h3>
+<p>This command toggles the state that always stays on top of a current window.</p>
+<h3 id="view---refresh-r-f5"><a href="#TOC">View - Refresh (R) F5</a></h3>
+<p>This command ...</p>
+<h3 id="view---widen-column-width-w-ctrl-.period"><a href="#TOC">View - Widen Column Width (W) Ctrl-.(period)</a></h3>
+<p>This command widens all column widths in the result set table of a current window.</p>
+<h3 id="view---narrow-column-width-n-ctrl-comma"><a href="#TOC">View - Narrow Column Width (N) Ctrl-,(comma)</a></h3>
+<p>This command narrows all column widths in the result set table of a current window.</p>
+<h3 id="view---adjust-column-width-a-ctrl-slash"><a href="#TOC">View - Adjust Column Width (A) Ctrl-/(slash)</a></h3>
+<p>This command adjusts all column widths in the result set table of a current window. For about adjust mode, see the next item.</p>
+<h3 id="view---auto-adjust-mode-m"><a href="#TOC">View - Auto Adjust Mode (M)</a></h3>
+<p>This command selects auto-adjusting mode to use when shows result.</p>
+<p>There are following modes:</p>
+<ul>
+<li>None(N): does nothing.</li>
+<li>Header(H): adjusts column width based on each header string.</li>
+<li>Value(V): adjusts based on the longest string in column values.</li>
+<li>Header And Value(A): adjusts based on the longest string in column values and column header string.</li>
+</ul>
+<h3 id="command---execute-x-ctrl-m"><a href="#TOC">Command - Execute (X) Ctrl-M</a></h3>
+<p>This command executes command. This is same as pressing enter key in the end of the I/O area. (... same behavior)</p>
+<h3 id="command---break-b-ctrl-pausebreak"><a href="#TOC">Command - BREAK (B) Ctrl-Pause(Break)</a></h3>
+<p>This command cancels executing command. The process on the server is not canceled.</p>
+<h3 id="command---history-back-p-ctrl-up"><a href="#TOC">Command - History Back (P) Ctrl-Up</a></h3>
+<p>This command rotates command histories backward.</p>
+<h3 id="command---history-next-n-ctrl-down"><a href="#TOC">Command - History Next (N) Ctrl-Down</a></h3>
+<p>This command rotates command histories forward.</p>
+<h3 id="command---rollback-r"><a href="#TOC">Command - Rollback (R)</a></h3>
+<p>This command displays confirm dialog and click &quot;OK&quot; to rollback.</p>
+<h3 id="command---commit-m"><a href="#TOC">Command - Commit (M)</a></h3>
+<p>This command displays confirm dialog and click &quot;OK&quot; to commit.</p>
+<h3 id="command---connect-c-ctrl-e"><a href="#TOC">Command - Connect (C) Ctrl-E</a></h3>
+<p>This command shows the list of connectors. Select connector name you want to connect to, and click &quot;OK&quot; to executes connect command.</p>
+<h3 id="command---disconnect-d-ctrl-d"><a href="#TOC">Command - Disconnect (D) Ctrl-D</a></h3>
+<p>This command disconnects current connection. This is the same as disconnect command.</p>
+<h3 id="command---post-proccess-0"><a href="#TOC">Command - Post-Proccess (0)</a></h3>
+<p>This command specifies the configuration of a &quot;Post-Proccess&quot; mode.</p>
+<p>The &quot;Post-Proccess&quot; is an action to notify that command finished. When the window which command is running, is not active, &quot;Post-Proccess&quot; is invoked.</p>
+<p>There are following modes:</p>
+<ul>
+<li>None(N): Does nothing.</li>
+<li>Focus(F): Focuses window.</li>
+<li>Shake(S): Shakes window.</li>
+<li>Blink(B): Blinks window.</li>
+</ul>
+<h3 id="command---encryption-key-k"><a href="#TOC">Command - Encryption Key (K)</a></h3>
+<p>This command ...</p>
+<h3 id="command---edit-connectors-e"><a href="#TOC">Command - Edit Connectors (E)</a></h3>
+<p>This command shows the dialog to edit connectors.</p>
+<h3 id="data---sort-s-alt-s"><a href="#TOC">Data - Sort (S) Alt-S</a></h3>
+<p>This command sorts records by selected column.</p>
+<h3 id="data---import-file-i"><a href="#TOC">Data - Import File (I)</a></h3>
+<p>This command imports from file into the table of current result.</p>
+<h3 id="data---export-file-e-ctrl-shift-s"><a href="#TOC">Data - Export File (E) Ctrl-Shift-S</a></h3>
+<p>This command exports results into file.</p>
+<h3 id="help---show-help"><a href="#TOC">Help - Show Help</a></h3>
+<p>This command shows this help file by default browser. This feature ...</p>
+<h3 id="help---about-stew"><a href="#TOC">Help - About Stew</a></h3>
+<p>This command shows version dialog about Stew.</p>
+<h2 id="properties"><a href="#TOC">Properties</a></h2>
+<p>You can set these system properties into java -D option or stew.properties file.</p>
+<h3 id="net.argius.stew.properties---location-of-properties-file"><a href="#TOC">net.argius.stew.properties - Location Of Properties File</a></h3>
+<p>Property Value: a file path or a directory path</p>
+<p>This property specifies the location of &quot;stew.properties&quot; file. This properties file is used as system properties and searched in the following steps:</p>
+<p>+If it specifies a file path, the file will be used as system properties. +If it specifies a directory path, the file will be searched a &quot;stew.properties&quot; file in the directory. +Search a file in the classpath. +Search a file in the system directory.</p>
+<p>The first file found is used. If a file is not found, ... (ignore it).</p>
+<h3 id="net.argius.stew.directory---working-directory"><a href="#TOC">net.argius.stew.directory - Working Directory</a></h3>
+<p>Property Value: a directory path (default: current directory)</p>
+<p>This property specifies the current directory as a internal state at the start, but it is not a platform one.</p>
+<h3 id="net.argius.stew.query.timeout---query-timeout"><a href="#TOC">net.argius.stew.query.timeout - Query Timeout</a></h3>
+<p>Property Value: integer seconds (default: 0)</p>
+<p>This property specifies the query timeout which is used in commands.</p>
+<p>If it is under 0, the property was not set.</p>
+<p>(implementation detail: for java.sql.Statement#setQueryTimeout)</p>
+<h3 id="net.argius.stew.rowcount.limit---limit-of-display-result-row-count"><a href="#TOC">net.argius.stew.rowcount.limit - Limit Of Display Result Row Count</a></h3>
+<p>Property Value: maximum number of rows (default: Integer.MAX_VALUE, about 2,147,000,000)</p>
+<p>This property specifies the maximum number of rows which show in the result set table. It is not used to output files, such as the export command.</p>
+<h3 id="net.argius.stew.command.import.batch.limit---limit-of-import-command-using-batch"><a href="#TOC">net.argius.stew.command.Import.batch.limit - Limit Of Import Command Using Batch</a></h3>
+<p>Property Value: limit number of rows (default: 10000)</p>
+<p>This property is used by the Import command. It is not used to output files, such as the export command.</p>
+<h3 id="net.argius.stew.ui.window.resident---regident"><a href="#TOC">net.argius.stew.ui.window.resident - Regident</a></h3>
+<p>Property Value: integer minutes</p>
+<p>This is an experimental feature.</p>
+<p>The app redraws continuously at the specified interval to prevent swap-out.</p>
+<h3 id="logger-configurations"><a href="#TOC">Logger Configurations</a></h3>
+<p>Use logging.properties in this package.</p>
+</body>
+</html>
