@@ -716,21 +716,26 @@ public final class WindowLauncher implements
     }
 
     private static void showHelp() {
-        final String htmlFileName = "MANUAL_ja.html";
+        final File localeFile = new File("MANUAL_" + Locale.getDefault().getLanguage() + ".html");
+        final File htmlFile = (localeFile.exists()) ? localeFile : new File("MANUAL.html");
+        boolean wasOpened = false;
         if (Desktop.isDesktopSupported()) {
             Desktop desktop = Desktop.getDesktop();
             if (desktop.isSupported(Desktop.Action.OPEN)) {
-                File file = new File(htmlFileName);
-                if (file.exists()) {
+                if (htmlFile.exists()) {
                     try {
-                        desktop.open(file);
+                        desktop.open(htmlFile);
+                        wasOpened = true;
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                 }
             }
-        } else {
-            final String msg = res.get("e.cannot-open-help-automatically", htmlFileName);
+        }
+        if (!wasOpened) {
+            final String msg = String.format("%s%nfile=%s",
+                                             res.get("e.cannot-open-help-automatically", htmlFile),
+                                             htmlFile.getAbsolutePath());
             WindowOutputProcessor.showInformationMessageDialog(getRootFrame(), msg, "");
         }
     }

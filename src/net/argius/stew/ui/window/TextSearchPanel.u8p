@@ -1,8 +1,8 @@
 
-label=検索
-forward=次を検索
-backward=前を検索
-close=閉じる
-useregex=正規表現
-ignorecase=英字のケース無視
-message.notfound=文字列 "{0}" は見つかりませんでした
+label=Search
+forward=FORWARD
+backward=BACKWARD
+close=Close
+useregex=Use Regular Expression
+ignorecase=Ignore Case
+message.notfound=String"{0}" was not found

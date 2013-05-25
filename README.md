@@ -7,7 +7,7 @@ Stew is the database (SQL) tool with JDBC.
 
 It had the following features:
 
- * Requires only Core Libraries except JDBC driver.
+ * Requires only Core Libraries except JDBC drivers.
  * Console Mode. Not only GUI.
  * Never keep the cursor:
     Statement and ResultSet will be released immediately.
@@ -15,21 +15,21 @@ It had the following features:
  * No dependency (version 2 and later):
     No DBMS specific code.
  * Supports Windows, MacOSX and Linux (version 3 and later):
-    Excepts "dock mode" of MacOSX.
+    Excepts "dock mode" on MacOSX.
 
 For more information, see MANUAL.html and FEATURE.md.
 
 
-## 2. How to Install, Migrate and Uninstall
+## 2. How to Install, Upgrade and Uninstall
 
 How to Install
-:   Just need to extract zip file. At least "stew.jar".
+:   To install this software, all you need to do is extracting the archive file.
 
-How to Migrate
-:   Just overwrite up-to-date files.
+How to Upgrade
+:   To upgrade this software, you need to extract new files and overwrite them with old files.
 
 How to Uninstall
-:   Just delete installed file and ".stew" dir.
+:   To uninstall this software, you need to delete installed files and a ".stew" dir.
     To see the location of ".stew", exec "@" command in Stew.
 
 
@@ -37,8 +37,6 @@ How to Uninstall
 
 Uses Apache License 2.0.
 See LICENSE file.
-
-We omitted to write the License header in every souce file.
 
 
 ## 4. Known Issues

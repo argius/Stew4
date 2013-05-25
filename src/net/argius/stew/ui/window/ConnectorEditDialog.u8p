@@ -1,28 +1,28 @@
-title=コネクタの設定
-connector.id=コネクタID
-connector.name=コネクタ名
-connector.classpath=クラスパス
-button.searchFile=ファイル
-connector.driver=ドライバ
-button.searchDriver=ドライバの検索
-connector.url=接続先URL
-connector.user=ユーザ
-connector.password=パスワード
-connector.encryption=暗号化処理
-connector.readonly=読取専用コマンドのみ使用する
-connector.autorollback=切断時に(自動で)ロールバックする
-button.submit=登録
-button.tryToConnect=接続試験
-button.cancel=キャンセル
-selectDriverClass=ドライバクラスの選択
-confirm.searchsystemclasspath=クラスパスが未指定のため、システムクラスパスから検索します。
-dialog.search.file.header=クラスパスの選択
-dialog.search.file.button=選択
+title=Connnector Configuration
+connector.id=Connnector ID
+connector.name=Connnector Name
+connector.classpath=Classpath
+button.searchFile=Search File
+connector.driver=Driver
+button.searchDriver=Search Driver
+connector.url=URL to connect
+connector.user=User
+connector.password=Password
+connector.encryption=Encryption
+connector.readonly=Read only
+connector.autorollback=Enables auto-rollback
+button.submit=Submit
+button.tryToConnect=Try To Connect
+button.cancel=Cancel
+selectDriverClass=Selects Driver Class
+confirm.searchsystemclasspath=Classpath was not specified. Search system classpath.
+dialog.search.file.header=Search classpath
+dialog.search.file.button=Select
 try.connect=\
-接続に成功しました!\n\
-接続先名称: {0}\n\
-バージョン: {1}
+Succeeded!\n\
+Name: {0}\n\
+Version: {1}
 
-search.driver.classnotfound=ドライバクラスが見つかりません。
-button.referToOthers=他の設定を参照
-dialog.referToOthers.message=選択した行の内容を未入力の箇所に貼り付けます。
+search.driver.classnotfound=Driver class was not found.
+button.referToOthers=Refer to other configs
+dialog.referToOthers.message=Copy selected infos to empty cells.

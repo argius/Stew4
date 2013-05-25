@@ -1,35 +1,31 @@
-i.cancelled=コマンドがキャンセルされました。\n（サーバ側の処理はキャンセルされていません。）
-i.choose-connection=接続を選択
-i.confirm-close=ウィンドウを閉じてよろしいですか？
-i.confirm-commit=コミットします。よろしいですか？
-i.confirm-overwrite=ファイル {0} は存在します。\n上書きしますか？
-i.confirm-quit=終了してよろしいですか？
-i.confirm-remove=削除してよろしいですか？
-i.confirm-rollback=ロールバックします。よろしいですか？
-i.confirm-save=保存してよろしいですか？
-i.confirm-without-register=登録せずに閉じてよろしいですか？
-i.confirm-without-save=保存せずに閉じてよろしいですか？
-i.exported=エクスポートされました。
-i.help-see-release-package=\
-ヘルプ機能は実装されていません。\n\n\
-簡易ヘルプについては、インストールパッケージ内の\n\
-Manual_ja.htmlを参照してください。
-i.can-only-use-after-tablenode-expanded=It can only use after the table node is expanded.
-i.input-encryption-key=暗号鍵を入力
-i.input-new-connector-id=新しいコネクタのIDを入力
-i.paren-in-processing=(処理中)
-i.reconnect-after-edited-current-connector=接続中の設定を変更する場合は、変更後に再接続してください。
-i.statusbar-message=\ 実行時間 {0} 秒 ( {1} )
-w.connector-readonly=コネクタは読取専用です。
-w.import-target-not-available=インポート先が無効です。
-w.no-connector=接続設定がありません。
-w.not-connect=接続されていません。
+i.cancelled=The command was canceled.\n(The process in the server-side may be still working.)
+i.choose-connection=Choose Connector
+i.confirm-close=Do you want to close this window?
+i.confirm-commit=Do you want to commit?
+i.confirm-overwrite=The file [{0}] already exists. Overwrite it?
+i.confirm-quit=Do you want to exit?
+i.confirm-remove=Do you want to remove it?
+i.confirm-rollback=Do you want to rollback?
+i.confirm-save=Do you want to save it?
+i.confirm-without-register=Do you really want to close without registering?
+i.confirm-without-save=Do you really want to close without saving?
+i.exported=Exported.
+i.can-only-use-after-tablenode-expanded=This command can use only after the table node is expanded.
+i.input-encryption-key=Input an encryption key
+i.input-new-connector-id=Input new connector ID.
+i.paren-in-processing=(IN PROGRESS)
+i.reconnect-after-edited-current-connector=If you want to reflect the change in the current connector, reconnect it.
+i.statusbar-message=\ Execution Time {0} seconds ( {1} )
+w.connector-readonly=This connector is read-only.
+w.import-target-not-available=The destination to import is not available.
+w.no-connector=No Connector.
+w.not-connect=Not connected.
 e.cannot-open-help-automatically=Can't open help({0}) automatically on this platform.
-e.enables-select-just-1-table=テーブルは1つだけ選択できます。
-e.error=エラー
-e.error-no-detail=エラー(詳細不明)
-e.file-not-exists=ファイル {0} は存在しません。
-e.id-already-exists=ID [{0}] は既に存在します。
+e.enables-select-just-1-table=You can choose only one of tables. 
+e.error=Error
+e.error-no-detail=Error(no detail)
+e.file-not-exists=The file [{0}] does not exist.
+e.id-already-exists=The ID [{0}] already exists.
 
 # common menu items
 item.cut=Cut

@@ -1,54 +1,54 @@
 
-i.did-mkdir=ディレクトリ[{0}]を作成しました。
-i.downloaded=ダウンロードされました。 (size={0}, file={1})
-i.exported=エクスポートされました。
-i.loaded=ロードされた {1} 件中 {0} 件 追加されました。
-i.proceeded={0} 件 処理されました。
-#i.selected={0} 件 ヒットしました。
-i.updated={0} 件 更新されました。
-i.wait-time=待機時間 : {0,number,0.000} 秒
-e.no-record=データが見つかりません。
-e.file-already-exists=ファイル[{0}]が存在します。
-e.failed-create-new-file=ファイル[{0}]の作成に失敗しました。
-e.failed-mkdir-filedir=ファイル[{0}]のディレクトリ作成に失敗しました。
+i.did-mkdir=The dir[{0}] was created.
+i.downloaded=Downloaded. (size={0}, file={1})
+i.exported=Exported.
+i.loaded=Added {0} records in loaded {1} records.
+i.proceeded=Proceeded {0} records.
+#i.selected=Found {0} records.
+i.updated=Updated {0} records.
+i.wait-time=Waited for {0,number,0.000} seconds.
+e.no-record=Record not found.
+e.file-already-exists=The file[{0}] already exists.
+e.failed-create-new-file=Failed to create the file[{0}].
+e.failed-mkdir-filedir=Failed to create dir of the file[{0}].
 
-usage.Count=<テーブル名> [<WHERE句>]
-usage.Download=<ルートディレクトリ> SELECT <ダウンロードするデータの列> [, ファイルパス...] FROM ... 
-usage.Export=<ファイル> [ HEADER ] [command(select|find|report)] \n        注: "report -"は不可
-usage.Find=<テーブル名パターン> [<テーブル種別パターン> [<スキーマ名パターン> [<カタログ名パターン> [ FULL ]]]]
-usage.Import=[<データファイル> <テーブル名> [ HEADER ]]
-usage.Load=[<SQLファイル> | <データファイル> <テーブル名> [ HEADER ]]
-usage.Report=- | <テーブル名> [ FULL | PK | INDEX ]
-usage.Time=[<回数>] <SQL文>
-usage.Upload=<ファイル> <SQL文(UPDATE|INSERT)>
-usage.Wait=<秒(小数第3位まで)> 
+usage.Count=<table-name> [<WHERE-phrase>]
+usage.Download=<root-dir> SELECT <data-column> [, file-path...] FROM ... 
+usage.Export=<file> [ HEADER ] [command(select|find|report)] \n        * except "report -"
+usage.Find=<table-name-pattern> [<table-type-pattern> [<schema-pattern> [<catalog-pattern> [ FULL ]]]]
+usage.Import=<data-file> <table-name> [ HEADER ]
+usage.Load=<SQL-file> | <data-file> <table-name> [ HEADER ]
+usage.Report=- | <table-name> [ FULL | PK | INDEX ]
+usage.Time=[<count>] <SQL>
+usage.Upload=<file> <SQL(UPDATE|INSERT)>
+usage.Wait=<seconds(3 digits after the decimal point)> 
 
 Export.command.usage={0}\n  {1} {2}
 
-Find.label.name=テーブル名
-Find.label.type=テーブル種別
-Find.label.schema=スキーマ名
-Find.label.catalog=カタログ名
+Find.label.name=Table Name
+Find.label.type=Type
+Find.label.schema=Schema
+Find.label.catalog=Catalog
 
-Report.label.catalog=カタログ
-Report.label.schema=スキーマ
-Report.label.tablename=テーブル名
-Report.label.sequence=順番
-Report.label.columnname=カラム名
-Report.label.keyname=プライマリキー名
-Report.label.nullable=Null可
-Report.label.type=型
-Report.label.size=サイズ
+Report.label.catalog=Catalog
+Report.label.schema=Schema
+Report.label.tablename=Table Name
+Report.label.sequence=Sequence
+Report.label.columnname=Column Name
+Report.label.keyname=Key Name
+Report.label.nullable=Nullable
+Report.label.type=Type
+Report.label.size=Size
 Report.dbinfo =\
-製品名             : {0}\n\
-製品バージョン     : {1}\n\
-ドライバ名         : {2}\n\
-ドライババージョン : {3}\n\
-接続ユーザ@URL     : {4}@{5}
+Product Name:    {0}\n\
+Product Version: {1}\n\
+Driver Name:     {2}\n\
+Driver Version:  {3}\n\
+User@URL:        {4}@{5}
 
-Time.once=実行時間 : {0,number,0.000} 秒
+Time.once=execution time: {0,number,0.000} seconds
 Time.summary=\
-合計 : {0,number,0.000} 秒\n\
-平均 : {1,number,0.000} 秒\n\
-最大 : {2,number,0.000} 秒\n\
-最小 : {3,number,0.000} 秒
+Total: {0,number,0.000} seconds\n\
+  Ave: {1,number,0.000} seconds\n\
+  Max: {2,number,0.000} seconds\n\
+  Min: {3,number,0.000} seconds

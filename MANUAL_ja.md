@@ -306,13 +306,13 @@ exportなどを同時に実行する場合や、コマンドラインからの�
 
     > alias
     エイリアスは未定義です。
-    > alias search select # from
-    > alias count select count(#) from
+    > alias search select * from
+    > alias count select count(*) from
     > alias search
-    alias search=[select # from]
+    alias search=[select * from]
     > search table1
-    >> select # from table1
-    (select # from table1 の結果)
+    >> select * from table1
+    (select * from table1 の結果)
     >
 
 
@@ -391,9 +391,9 @@ Stewを終了します。確認待ちは行いません。
 「合計」「平均」「最大」「最小」を集計します。
 回数を指定しない場合は、1回の実行時間を表示します。
 
-    > time select # from EMPLOYEE
+    > time select * from EMPLOYEE
     実行時間 : 0.093 秒
-    > time 100 select # from EMPLOYEE
+    > time 100 select * from EMPLOYEE
     合計 : 0.484 秒
     平均 : 0.005 秒
     最大 : 0.094 秒
@@ -411,7 +411,7 @@ Stewを終了します。確認待ちは行いません。
 
 ### report - データベース情報表示
 
-    > report - | <テーブル名> [ PK | INDEX ]
+    > report - | <テーブル名> [ FULL | PK | INDEX ]
 
 接続中のコネクションに関する情報を表示します。
 
@@ -422,6 +422,7 @@ Stewを終了します。確認待ちは行いません。
 
 テーブル名とオプションが指定された場合は、PKを指定するとプライマリキーの一覧が、
 INDEXを指定するとインデックスキーの一覧が、それぞれ表示されます。
+FULLを指定すると、API(DatabaseMetaData#getColumns)が返すすべての列が表示されます。
 
 
 ### download - 1データごとにダウンロード
