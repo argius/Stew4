@@ -4,10 +4,8 @@ i.downloaded=Downloaded. (size={0}, file={1})
 i.exported=Exported.
 i.loaded=Added {0} records in loaded {1} records.
 i.proceeded=Proceeded {0} records.
-#i.selected=Found {0} records.
 i.updated=Updated {0} records.
 i.wait-time=Waited for {0,number,0.000} seconds.
-e.no-record=Record not found.
 e.file-already-exists=The file[{0}] already exists.
 e.failed-create-new-file=Failed to create the file[{0}].
 e.failed-mkdir-filedir=Failed to create dir of the file[{0}].

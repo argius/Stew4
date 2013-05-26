@@ -10,10 +10,6 @@ i.confirm-save=保存してよろしいですか？
 i.confirm-without-register=登録せずに閉じてよろしいですか？
 i.confirm-without-save=保存せずに閉じてよろしいですか？
 i.exported=エクスポートされました。
-i.help-see-release-package=\
-ヘルプ機能は実装されていません。\n\n\
-簡易ヘルプについては、インストールパッケージ内の\n\
-Manual_ja.htmlを参照してください。
 i.can-only-use-after-tablenode-expanded=テーブルノードを展開した後でのみ実行できます。
 i.input-encryption-key=暗号鍵を入力
 i.input-new-connector-id=新しいコネクタのIDを入力

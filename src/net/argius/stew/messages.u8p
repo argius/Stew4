@@ -7,7 +7,7 @@ i.deleted=Deleted {0} records.
 i.directory-changed=The current directory was changed [{0}] to [{1}].
 i.disconnected=Disconnected.
 i.dump-alias={0}\=[{1}]
-i.exit=Do you want to exit?
+i.exit=Exit Stew.
 i.inserted=Inserted {0} records.
 i.noalias=No aliases.
 i.now=({0,date,yyyy-MM-dd}T{0,time,HH:mm:ss}{0,time,ZZZZ})

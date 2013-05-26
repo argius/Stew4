@@ -4,10 +4,8 @@ i.downloaded=ダウンロードされました。 (size={0}, file={1})
 i.exported=エクスポートされました。
 i.loaded=ロードされた {1} 件中 {0} 件 追加されました。
 i.proceeded={0} 件 処理されました。
-#i.selected={0} 件 ヒットしました。
 i.updated={0} 件 更新されました。
 i.wait-time=待機時間 : {0,number,0.000} 秒
-e.no-record=データが見つかりません。
 e.file-already-exists=ファイル[{0}]が存在します。
 e.failed-create-new-file=ファイル[{0}]の作成に失敗しました。
 e.failed-mkdir-filedir=ファイル[{0}]のディレクトリ作成に失敗しました。
