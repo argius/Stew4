@@ -215,8 +215,8 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
                 ++c;
             }
         }
-        if (c >= 2) {
-            return String.format("%s;%s", phrase, join(",", nCopies(c, "")));
+        if (c >= 1) {
+            return String.format("%s;%s", phrase, join("", nCopies(c - 1, ",")));
         }
         return phrase;
     }
