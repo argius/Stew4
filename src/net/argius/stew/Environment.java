@@ -139,7 +139,10 @@ public final class Environment {
             }
             try {
                 conn.close();
-                log.debug("disconnected %s (conn=%08x, env=%08x)", connector.getId(), conn.hashCode(), hashCode());
+                if (log.isDebugEnabled()) {
+                    final String id = (connector == null) ? "null" : connector.getId();
+                    log.debug("disconnected %s (conn=%08x, env=%08x)", id, conn.hashCode(), hashCode());
+                }
                 if (Bootstrap.getPropertyAsBoolean("net.argius.stew.print-disconnected-time")) {
                     outputMessage("i.now", System.currentTimeMillis());
                 }

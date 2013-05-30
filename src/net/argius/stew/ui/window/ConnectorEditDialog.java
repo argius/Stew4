@@ -44,7 +44,8 @@ final class ConnectorEditDialog extends JDialog implements AnyActionListener {
     private final JCheckBox cUsesAutoRollback;
 
     private List<ChangeListener> listenerList;
-    private File currentDirectory;
+
+    private volatile File currentDirectory;
 
     ConnectorEditDialog(JDialog owner, Connector connector) {
         // [Init Instances]

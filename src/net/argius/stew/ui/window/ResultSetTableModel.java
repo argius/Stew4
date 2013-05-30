@@ -594,18 +594,14 @@ final class ResultSetTableModel extends DefaultTableModel {
                                                String table) throws SQLException {
         ResultSet rs = dbmeta.getPrimaryKeys(catalog, schema, table);
         try {
-            Map<Short, String> result = new TreeMap<Short, String>();
+            List<String> pkList = new ArrayList<String>();
             Set<String> schemaSet = new HashSet<String>();
             while (rs.next()) {
-                result.put(rs.getShort(5), rs.getString(4));
+                pkList.add(rs.getString(4));
                 schemaSet.add(rs.getString(2));
             }
-            if (result.isEmpty() || schemaSet.size() != 1) {
+            if (schemaSet.size() != 1) {
                 return Collections.emptyList();
-            }
-            List<String> pkList = new ArrayList<String>();
-            for (Short key : result.keySet()) {
-                pkList.add(result.get(key));
             }
             return pkList;
         } finally {

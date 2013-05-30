@@ -10,11 +10,10 @@ public final class DaemonThreadFactory implements ThreadFactory {
     private static final Logger log = Logger.getLogger(DaemonThreadFactory.class);
 
     private static volatile int count;
-
-    private static ThreadFactory instance;
+    private static volatile ThreadFactory instance;
 
     private DaemonThreadFactory() {
-    }
+    } // forbidden
 
     /**
      * Returns an instance of DaemonThreadFactory (as ThreadFactory).
