@@ -50,6 +50,7 @@ final class ResultSetTable extends JTable implements AnyActionListener, TextSear
 
     private static final Logger log = Logger.getLogger(ResultSetTable.class);
     private static final TableCellRenderer nullRenderer = new NullValueRenderer();
+    private static final boolean[] booleans = {false, true};
 
     private final AnyActionListener anyActionListener;
     private final ColumnHeaderCellRenderer columnHeaderRenderer;
@@ -87,8 +88,7 @@ final class ResultSetTable extends JTable implements AnyActionListener, TextSear
         rowHeader.addMouseListener(rowHeaderMouseListener);
         rowHeader.addMouseMotionListener(rowHeaderMouseListener);
         // cursor
-        for (int i = 0; i < 2; i++) {
-            final boolean withSelect = (i == 1);
+        for (final boolean withSelect : booleans) {
             bindJumpAction("home", VK_HOME, withSelect);
             bindJumpAction("end", VK_END, withSelect);
             bindJumpAction("top", VK_UP, withSelect);
