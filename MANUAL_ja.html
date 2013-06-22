@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
-  <title>Stew マニュアル</title>
+  <title>Stew4 ユーザーマニュアル</title>
   <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
@@ -11,7 +11,7 @@
 </head>
 <body>
 <header>
-<h1 class="title">Stew マニュアル</h1>
+<h1 class="title">Stew4 ユーザーマニュアル</h1>
 <h3 class="date">version 4.0</h3>
 </header>
 <nav id="TOC">
@@ -43,6 +43,7 @@
 <li><a href="#s---ファイル内容をスクリプトとして実行-組み込みコマンド">-s - ファイル内容をスクリプトとして実行 (組み込みコマンド)</a></li>
 <li><a href="#cd---カレントディレクトリの移動-組み込みコマンド">cd - カレントディレクトリの移動 (組み込みコマンド)</a></li>
 <li><a href="#場所の表示-組み込みコマンド">@ - 場所の表示 (組み込みコマンド)</a></li>
+<li><a href="#システムプロパティ-組み込みコマンド">? - システムプロパティ (組み込みコマンド)</a></li>
 <li><a href="#alias---エイリアスコマンド別名の登録-組み込みコマンド">alias - エイリアス(コマンド別名)の登録 (組み込みコマンド)</a></li>
 <li><a href="#unalias---エイリアスコマンド別名の解除-組み込みコマンド">unalias - エイリアス(コマンド別名)の解除 (組み込みコマンド)</a></li>
 <li><a href="#exit---終了-組み込みコマンド">exit - 終了 (組み込みコマンド)</a></li>
@@ -137,7 +138,8 @@
 <pre><code>&gt; java -jar stew.jar --gui</code></pre>
 <p>CUIモードで起動する場合は、以下のコマンドを実行します。</p>
 <pre><code>&gt; java -jar stew.jar --cui</code></pre>
-<p>起動スクリプトもしくはショートカットやエイリアスを作成しておくと便利です。 UNIX系OSの場合は&quot;stew.sh&quot;を、Windowsの場合は&quot;stew.bat&quot;を参照してください。</p>
+<p>起動スクリプトもしくはショートカットやエイリアスを作成しておくと便利です。 stew.propertiesに以下の設定を追加すれば、JarファイルのダブルクリックでGUI起動できるようになります。</p>
+<pre><code>stew.boot=GUI</code></pre>
 <p>Stewを実行すると、システムディレクトリ&quot;.stew&quot;が作成され、設定の保存に使用されます。 &quot;.stew&quot;ディレクトリは、デフォルトではカレントディレクトリに作成されます。</p>
 <h2 id="アンインストール"><a href="#TOC">アンインストール</a></h2>
 <p>インストールしたファイルと&quot;.stew&quot;ディレクトリを削除してください。</p>
@@ -250,19 +252,31 @@
 <h3 id="場所の表示-組み込みコマンド"><a href="#TOC">@ - 場所の表示 (組み込みコマンド)</a></h3>
 <pre><code>&gt; @</code></pre>
 <p>カレントディレクトリとシステムディレクトリの場所を表示します。</p>
+<h3 id="システムプロパティ-組み込みコマンド"><a href="#TOC">? - システムプロパティ (組み込みコマンド)</a></h3>
+<pre><code>&gt; ? [&lt;プロパティ名&gt; [&lt;プロパティ名2&gt; ... &lt;プロパティ名n&gt;]]</code></pre>
+<p>指定されたシステムプロパティを表示します。(System.getProperty)</p>
+<p>引数を指定しない場合は、JRE,OS,Localeの情報を表示します。</p>
+<pre><code>&gt; ?
+JRE : ...
+OS : ...
+Locale : ja_JP
+&gt; ? java.version user.timezone zzz
+java.version=[1.6.0_##]
+user.timezone=[Asia/Tokyo]
+zzz=undefined</code></pre>
 <h3 id="alias---エイリアスコマンド別名の登録-組み込みコマンド"><a href="#TOC">alias - エイリアス(コマンド別名)の登録 (組み込みコマンド)</a></h3>
 <pre><code>&gt; alias [&lt;エイリアス&gt; [&lt;コマンド&gt;]]</code></pre>
 <p>コマンド別名を登録します。 引数が1つで実行した場合は、既に設定されたコマンド内容を表示します。 引数なしで実行した場合は、すべての定義済みエイリアスを表示します。</p>
 <p>登録または表示の前にファイルからメモリ上の情報を最新化します。 ファイルを直接修正したり、他のスレッドで変更した内容を反映させたい場合は、 このコマンドを実行してください。 （実装詳細：循環参照などの無限ループ抑制のために、展開の深さは最大100。）</p>
 <pre><code>&gt; alias
 エイリアスは未定義です。
-&gt; alias search select # from
-&gt; alias count select count(#) from
+&gt; alias search select * from
+&gt; alias count select count(*) from
 &gt; alias search
-alias search=[select # from]
+alias search=[select * from]
 &gt; search table1
-&gt;&gt; select # from table1
-(select # from table1 の結果)
+&gt;&gt; select * from table1
+(select * from table1 の結果)
 &gt;</code></pre>
 <h3 id="unalias---エイリアスコマンド別名の解除-組み込みコマンド"><a href="#TOC">unalias - エイリアス(コマンド別名)の解除 (組み込みコマンド)</a></h3>
 <pre><code>&gt; unalias &lt;エイリアス&gt;</code></pre>
@@ -299,9 +313,9 @@ alias search=[select # from]
 <pre><code>&gt; time [&lt;回数&gt;] &lt;SQL文&gt;</code></pre>
 <p>指定したSQL文を実行し、その実行時間を計測して表示します。</p>
 <p>回数が指定された場合は、回数分SQLを繰り返し実行して、 「合計」「平均」「最大」「最小」を集計します。 回数を指定しない場合は、1回の実行時間を表示します。</p>
-<pre><code>&gt; time select # from EMPLOYEE
+<pre><code>&gt; time select * from EMPLOYEE
 実行時間 : 0.093 秒
-&gt; time 100 select # from EMPLOYEE
+&gt; time 100 select * from EMPLOYEE
 合計 : 0.484 秒
 平均 : 0.005 秒
 最大 : 0.094 秒
@@ -311,11 +325,11 @@ alias search=[select # from]
 <pre><code>&gt; find &lt;テーブル名パターン&gt; [&lt;テーブル種別パターン&gt; [&lt;スキーマ名パターン&gt; [&lt;カタログ名パターン&gt; [ FULL ]]]]</code></pre>
 <p>参照可能なテーブルの一覧を表示します。 &quot;パターン&quot;というキーワードを含むパラメータは、ワイルドカード（#,?）が指定できます。</p>
 <h3 id="report---データベース情報表示"><a href="#TOC">report - データベース情報表示</a></h3>
-<pre><code>&gt; report - | &lt;テーブル名&gt; [ PK | INDEX ]</code></pre>
+<pre><code>&gt; report - | &lt;テーブル名&gt; [ FULL | PK | INDEX ]</code></pre>
 <p>接続中のコネクションに関する情報を表示します。</p>
 <p>-（ハイフン）が指定された場合は、ＤＢとJDBCドライバの名称とバージョン、 接続ユーザとアドレスを表示します。</p>
 <p>テーブル名のみが指定された場合は、テーブルの列情報が表示されます。</p>
-<p>テーブル名とオプションが指定された場合は、PKを指定するとプライマリキーの一覧が、 INDEXを指定するとインデックスキーの一覧が、それぞれ表示されます。</p>
+<p>テーブル名とオプションが指定された場合は、PKを指定するとプライマリキーの一覧が、 INDEXを指定するとインデックスキーの一覧が、それぞれ表示されます。 FULLを指定すると、API(DatabaseMetaData#getColumns)が返すすべての列が表示されます。</p>
 <h3 id="download---1データごとにダウンロード"><a href="#TOC">download - 1データごとにダウンロード</a></h3>
 <pre><code>&gt; download &lt;ルートディレクトリ&gt; SELECT &lt;ダウンロードするデータの列&gt; [, ファイルパス...] FROM ...</code></pre>
 <p>1つの列のデータをダウンロードしてファイルに保存します。</p>

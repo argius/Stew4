@@ -1,7 +1,7 @@
 % Readme - Stew4
 
 
-## 1. Outline
+## 1. Overview
 
 Stew is the database (SQL) tool with JDBC.
 

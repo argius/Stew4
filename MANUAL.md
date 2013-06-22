@@ -210,6 +210,24 @@ Changes current directory to specified one.
 Displays the paths of current directory and system directory.
 
 
+### ? - Displays System Properties (built-in)
+
+    > ? [<property-name> [<property-name-2> ... <property-name-n>]]
+
+Display System Properties. (System.getProperty)
+
+By defauts, it displays JRE, OS and Locale.
+
+    > ?
+    JRE : ...
+    OS : ...
+    Locale : ja_JP
+    > ? java.version user.timezone zzz
+    java.version=[1.6.0_##]
+    user.timezone=[Europe/London]
+    zzz=undefined
+
+
 ### alias - Registers alias (built-in)
 
     > alias [<name> [<command>]]
@@ -489,6 +507,10 @@ just connected: connector as a root node and sub nodes ...
 Each node expands ...
 
 
+An "Auto-expansion" is a function to automatically expands nodes in the database info tree when connecting a database.
+If you use it, create a TSV file named "autoexpansion.tsv" in the system directory (.stew) and write node name lists as TSV into this file.
+
+
 The context menu for this component are listed below:
 
 
@@ -720,7 +742,7 @@ There are following modes:
 
 ### Command - Encryption Key (K)
 
-This command ...
+This command shows the dialog to input an encryption key.
 
 
 ### Command - Edit Connectors (E)
@@ -746,7 +768,6 @@ This command exports results into file.
 ### Help - Show Help
 
 This command shows this help file by default browser.
-This feature ...
 
 
 ### Help - About Stew

@@ -43,6 +43,7 @@
 <li><a href="#s---executes-file-content-as-script-built-in">-s - Executes file content as script (built-in)</a></li>
 <li><a href="#cd---changes-current-directory-built-in">cd - Changes current directory (built-in)</a></li>
 <li><a href="#displays-directories-built-in">@ - Displays directories (built-in)</a></li>
+<li><a href="#displays-system-properties-built-in">? - Displays System Properties (built-in)</a></li>
 <li><a href="#alias---registers-alias-built-in">alias - Registers alias (built-in)</a></li>
 <li><a href="#unalias---removes-alias-built-in">unalias - Removes alias (built-in)</a></li>
 <li><a href="#exit---exits-application-built-in">exit - Exits application (built-in)</a></li>
@@ -234,6 +235,18 @@ $ stew --edit
 <h3 id="displays-directories-built-in"><a href="#TOC">@ - Displays directories (built-in)</a></h3>
 <pre><code>&gt; @</code></pre>
 <p>Displays the paths of current directory and system directory.</p>
+<h3 id="displays-system-properties-built-in"><a href="#TOC">? - Displays System Properties (built-in)</a></h3>
+<pre><code>&gt; ? [&lt;property-name&gt; [&lt;property-name-2&gt; ... &lt;property-name-n&gt;]]</code></pre>
+<p>Display System Properties. (System.getProperty)</p>
+<p>By defauts, it displays JRE, OS and Locale.</p>
+<pre><code>&gt; ?
+JRE : ...
+OS : ...
+Locale : ja_JP
+&gt; ? java.version user.timezone zzz
+java.version=[1.6.0_##]
+user.timezone=[Europe/London]
+zzz=undefined</code></pre>
 <h3 id="alias---registers-alias-built-in"><a href="#TOC">alias - Registers alias (built-in)</a></h3>
 <pre><code>&gt; alias [&lt;name&gt; [&lt;command&gt;]]</code></pre>
 <p>Registers the alias of command. When called with an argument, display the alias and its command. When called without arguments, display all aliases.</p>
@@ -377,6 +390,7 @@ Selected 42 records.</code></pre>
 </dl>
 <h3 id="database-info-tree"><a href="#TOC">Database Info Tree</a></h3>
 <p>The database info tree is a tree view of hierarchical structure, which consists catalogs, schemas, tables, table type and columns as a tree. Not connected: blank ... just connected: connector as a root node and sub nodes ... Each node expands ...</p>
+<p>An &quot;Auto-expansion&quot; is a function to automatically expands nodes in the database info tree when connecting a database. If you use it, create a TSV file named &quot;autoexpansion.tsv&quot; in the system directory (.stew) and write node name lists as TSV into this file.</p>
 <p>The context menu for this component are listed below:</p>
 <dl>
 <dt>Copy</dt>
@@ -493,7 +507,7 @@ Selected 42 records.</code></pre>
 <li>Blink(B): Blinks window.</li>
 </ul>
 <h3 id="command---encryption-key-k"><a href="#TOC">Command - Encryption Key (K)</a></h3>
-<p>This command ...</p>
+<p>This command shows the dialog to input an encryption key.</p>
 <h3 id="command---edit-connectors-e"><a href="#TOC">Command - Edit Connectors (E)</a></h3>
 <p>This command shows the dialog to edit connectors.</p>
 <h3 id="data---sort-s-alt-s"><a href="#TOC">Data - Sort (S) Alt-S</a></h3>
@@ -503,7 +517,7 @@ Selected 42 records.</code></pre>
 <h3 id="data---export-file-e-ctrl-shift-s"><a href="#TOC">Data - Export File (E) Ctrl-Shift-S</a></h3>
 <p>This command exports results into file.</p>
 <h3 id="help---show-help"><a href="#TOC">Help - Show Help</a></h3>
-<p>This command shows this help file by default browser. This feature ...</p>
+<p>This command shows this help file by default browser.</p>
 <h3 id="help---about-stew"><a href="#TOC">Help - About Stew</a></h3>
 <p>This command shows version dialog about Stew.</p>
 <h2 id="properties"><a href="#TOC">Properties</a></h2>
