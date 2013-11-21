@@ -890,7 +890,9 @@ final class ResultSetTable extends JTable implements AnyActionListener, TextSear
 
     @Override
     public void reset() {
-        // empty
+        ((DefaultTableModel)getModel()).setRowCount(0);
+        lastSortedIndex = -1;
+        lastSortedIsReverse = false;
     }
 
     static final class TableHeaderTextSearch implements TextSearch {
