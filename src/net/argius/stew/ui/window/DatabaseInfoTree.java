@@ -600,6 +600,12 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
                         }
                     });
                 } catch (SQLException ex) {
+                    try {
+                        if (dbmeta.getConnection().isClosed())
+                            return;
+                    } catch (SQLException exx) {
+                        ex.setNextException(exx);
+                    }
                     throw new RuntimeException(ex);
                 }
             }
