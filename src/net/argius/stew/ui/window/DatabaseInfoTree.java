@@ -12,7 +12,6 @@ import static net.argius.stew.ui.window.AnyActionKey.copy;
 import static net.argius.stew.ui.window.AnyActionKey.refresh;
 import static net.argius.stew.ui.window.DatabaseInfoTree.ActionKey.*;
 import static net.argius.stew.ui.window.WindowOutputProcessor.showInformationMessageDialog;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -20,11 +19,9 @@ import java.sql.*;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.List;
-
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
-
 import net.argius.stew.*;
 
 /**
@@ -79,7 +76,18 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
     @Override
     public void anyActionPerformed(AnyActionEvent ev) {
         log.atEnter("anyActionPerformed", ev);
-        if (ev.isAnyOf(copySimpleName)) {
+        if (ev.isAnyOf(copy)) {
+            Object src = ev.getSource();
+            if (src != null && src instanceof JMenuItem) {
+                KeyStroke k = ((JMenuItem)src).getAccelerator();
+                if (k != null) {
+                    ActionListener action = getActionForKeyStroke(k);
+                    if (action != null) {
+                        action.actionPerformed(new ActionEvent(this, 1001, ""));
+                    }
+                }
+            }
+        } else if (ev.isAnyOf(copySimpleName)) {
             copySimpleName();
         } else if (ev.isAnyOf(copyFullName)) {
             copyFullName();
