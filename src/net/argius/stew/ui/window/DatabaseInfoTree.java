@@ -77,15 +77,10 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
     public void anyActionPerformed(AnyActionEvent ev) {
         log.atEnter("anyActionPerformed", ev);
         if (ev.isAnyOf(copy)) {
-            Object src = ev.getSource();
-            if (src != null && src instanceof JMenuItem) {
-                KeyStroke k = ((JMenuItem)src).getAccelerator();
-                if (k != null) {
-                    ActionListener action = getActionForKeyStroke(k);
-                    if (action != null) {
-                        action.actionPerformed(new ActionEvent(this, 1001, ""));
-                    }
-                }
+            final String cmd = ev.getActionCommand();
+            Action action = getActionMap().get(cmd);
+            if (action != null) {
+                action.actionPerformed(new ActionEvent(this, 1001, cmd));
             }
         } else if (ev.isAnyOf(copySimpleName)) {
             copySimpleName();
