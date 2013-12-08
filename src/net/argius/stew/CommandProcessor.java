@@ -8,7 +8,6 @@ import javax.script.*;
 
 import net.argius.stew.io.*;
 import net.argius.stew.ui.*;
-import net.argius.stew.ui.window.*;
 
 /**
  * Command Processor.
@@ -16,7 +15,7 @@ import net.argius.stew.ui.window.*;
 final class CommandProcessor {
 
     private static Logger log = Logger.getLogger(CommandProcessor.class);
-    private static ResourceManager res = ResourceManager.getInstance(WindowLauncher.class);
+    private static ResourceManager res = ResourceManager.getInstance(Command.class);
     private static final String HYPHEN_E = "-e";
 
     private final Environment env;
