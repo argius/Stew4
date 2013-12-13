@@ -127,13 +127,29 @@ final class CommandProcessor {
         }
         // script
         if (commandName.equals("-s")) {
-            final File file = Path.resolve(env.getCurrentDirectory(), p.at(1));
-            if (!file.isFile()) {
+            if (!p.has(1)) {
                 throw new UsageException(res.get("usage.-s"));
             }
-            log.debug("-s %s", file.getAbsolutePath());
-            ScriptEngineManager factory = new ScriptEngineManager();
-            ScriptEngine engine = factory.getEngineByName("JavaScript");
+            final String p1 = p.at(1);
+            final File file;
+            if (p1.contains(".")) { // by extension
+                file = Path.resolve(env.getCurrentDirectory(), p1);
+                if (!file.exists() || !file.isFile()) {
+                    outputMessage("e.file-not-exists", p1);
+                    return true;
+                }
+                log.debug("script file: %s", file.getAbsolutePath());
+            } else { // by name
+                file = null;
+                log.debug("script name: %s", p1);
+            }
+            ScriptEngine engine = (file == null)
+                ? new ScriptEngineManager().getEngineByName(p1)
+                : new ScriptEngineManager().getEngineByExtension(Path.getExtension(file));
+            if (engine == null) {
+                outputMessage("e.unsupported", p1);
+                return true;
+            }
             engine.put("connection", env.getCurrentConnection());
             engine.put("conn", env.getCurrentConnection());
             engine.put("patameter", p);
@@ -141,12 +157,17 @@ final class CommandProcessor {
             engine.put("outputProcessor", op);
             engine.put("op", op);
             try {
-                Reader r = new FileReader(file);
-                try {
-                    engine.eval("function using(o, f) { f(o); o.close() }");
-                    engine.eval(r);
-                } finally {
-                    r.close();
+                if (file == null) {
+                    engine.put(ScriptEngine.FILENAME, null);
+                    engine.eval(p.after(2));
+                } else {
+                    engine.put(ScriptEngine.FILENAME, file.getAbsolutePath());
+                    Reader r = new FileReader(file);
+                    try {
+                        engine.eval(r);
+                    } finally {
+                        r.close();
+                    }
                 }
             } catch (Exception ex) {
                 throw new CommandException(ex);

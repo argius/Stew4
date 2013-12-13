@@ -26,6 +26,7 @@ e.command=エラー: {0}
 e.database=データベースエラー: {0}
 e.dir-not-exists=ディレクトリ[{0}]は存在しません。
 e.fatal=致命的なエラー: {0}
+e.file-not-exists=ファイル[{0}]は存在しません。
 e.no-connector=コネクタ [{0}] はありません。
 e.not-connect=接続されていません。
 e.not-found=エラー: コマンド [{0}] は見つかりませんでした。
