@@ -12,7 +12,7 @@ e.failed-mkdir-filedir=Failed to create dir of the file[{0}].
 
 usage.cd=<DIRECTORY>
 usage.-f=<FILE>
-usage.-s=<SCRIPT FILE>
+usage.-s=<SCRIPT FILE> | <SCRIPT-NAME> <SCRIPT-CODE> | .
 usage.unalias=<ALIAS>
 usage.Count=<table-name> [<WHERE-phrase>]
 usage.Download=<root-dir> SELECT <data-column> [, file-path...] FROM ... 
