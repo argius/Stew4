@@ -43,7 +43,6 @@ public final class WindowLauncher implements
     private final WindowOutputProcessor op;
     private final Menu menu;
     private final JPanel panel1;
-    private final JPanel panel2;
     private final JSplitPane split1;
     private final JSplitPane split2;
     private final ResultSetTable resultSetTable;
@@ -70,7 +69,6 @@ public final class WindowLauncher implements
         this.op = new WindowOutputProcessor(this, resultSetTable, textArea);
         this.menu = new Menu(this);
         this.panel1 = new JPanel(new BorderLayout());
-        this.panel2 = new JPanel(new BorderLayout());
         this.split1 = split1;
         this.split2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         this.resultSetTable = resultSetTable;
@@ -130,12 +128,7 @@ public final class WindowLauncher implements
          * | | scroll(resultSetTable) | |
          * | +------------------------+ |
          * | +------------------------+ |
-         * | | panel2                 | |
-         * | | +--------------------+ | |
-         * | | | scroll(textArea)   | | |
-         * | | +--------------------+ | |
-         * | | | textSearchPanel    | | |
-         * | | +--------------------+ | |
+         * | | scroll(textArea)       | |
          * | +------------------------+ |
          * +----------------------------+
          * when DatabaseInfoTree is visible
@@ -148,6 +141,8 @@ public final class WindowLauncher implements
          * | | | (infoTree) | |            | | |
          * | | +------------+ +------------+ | |
          * | +-------------------------------+ |
+         * | | textSearchPanel               | |
+         * | +-------------------------------+ |
          * +-----------------------------------+
          * | status bar                        |
          * +-----------------------------------+
@@ -157,15 +152,14 @@ public final class WindowLauncher implements
          * | +-------------------------------+ |
          * | | split2                        | |
          * | +-------------------------------+ |
+         * | | textSearchPanel               | |
+         * | +-------------------------------+ |
          * +-----------------------------------+
          * | status bar                        |
          * +-----------------------------------+
          */
-        panel2.add(new JScrollPane(textArea, VERTICAL_SCROLLBAR_ALWAYS, HORIZONTAL_SCROLLBAR_NEVER),
-                   BorderLayout.CENTER);
-        panel2.add(textSearchPanel, BorderLayout.SOUTH);
         split2.setTopComponent(new JScrollPane(resultSetTable));
-        split2.setBottomComponent(panel2);
+        split2.setBottomComponent(new JScrollPane(textArea, VERTICAL_SCROLLBAR_ALWAYS, HORIZONTAL_SCROLLBAR_NEVER));
         op.add(panel1, BorderLayout.CENTER);
         op.add(statusBar, BorderLayout.PAGE_END);
         op.setJMenuBar(menu);
@@ -371,6 +365,7 @@ public final class WindowLauncher implements
             split1.setBottomComponent(split2);
             panel1.removeAll();
             panel1.add(split1, BorderLayout.CENTER);
+            panel1.add(textSearchPanel, BorderLayout.PAGE_END);
             infoTree.setEnabled(true);
             if (env != null) {
                 try {
@@ -385,6 +380,7 @@ public final class WindowLauncher implements
             infoTree.setEnabled(false);
             panel1.removeAll();
             panel1.add(split2, BorderLayout.CENTER);
+            panel1.add(textSearchPanel, BorderLayout.PAGE_END);
         }
         SwingUtilities.updateComponentTreeUI(op);
     }
