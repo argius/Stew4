@@ -14,6 +14,7 @@ i.now=({0,date,yyyy-MM-dd}T{0,time,HH:mm:ss}{0,time,ZZZZ})
 i.proceeded=Proceeded {0} records.
 i.response-time=[ response time: {0,number,#.###} seconds ]
 i.rollbacked=Rollbacked.
+i.script-context-initialized=Script Context was initialized.
 i.selected=Selected {0} records.
 i.updated=Updated {0} records.
 w.auto-commit-not-available=Warning: Auto-commit mode is not available.

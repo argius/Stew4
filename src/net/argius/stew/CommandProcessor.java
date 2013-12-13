@@ -127,13 +127,23 @@ final class CommandProcessor {
         }
         // script
         if (commandName.equals("-s")) {
-            final File file = Path.resolve(env.getCurrentDirectory(), p.at(1));
+            if (!p.has(1)) {
+                throw new UsageException(res.get("usage.-s"));
+            }
+            final String p1 = p.at(1);
+            if (p1.equals(".")) {
+                env.initializeScriptContext();
+                outputMessage("i.script-context-initialized");
+                return true;
+            }
+            final File file = Path.resolve(env.getCurrentDirectory(), p1);
             if (!file.isFile()) {
                 throw new UsageException(res.get("usage.-s"));
             }
             log.debug("-s %s", file.getAbsolutePath());
             ScriptEngineManager factory = new ScriptEngineManager();
             ScriptEngine engine = factory.getEngineByName("JavaScript");
+            engine.setContext(env.getScriptContext());
             engine.put("connection", env.getCurrentConnection());
             engine.put("conn", env.getCurrentConnection());
             engine.put("patameter", p);

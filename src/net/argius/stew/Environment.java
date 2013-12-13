@@ -5,6 +5,8 @@ import static net.argius.stew.Bootstrap.getSystemFile;
 import java.io.*;
 import java.sql.*;
 
+import javax.script.*;
+
 import net.argius.stew.ui.*;
 
 /**
@@ -26,6 +28,7 @@ public final class Environment {
     private File currentDirectory;
     private long connectorTimestamp;
     private AliasMap aliasMap;
+    private ScriptContext scriptContext;
 
     private Environment(ConnectorMap connectorMap, File currentDirectory) {
         this.connectorMap = connectorMap;
@@ -49,6 +52,7 @@ public final class Environment {
         this(new ConnectorMap(), getInitialCurrentDirectory()); // init directories
         initializeQueryTimeout();
         loadConnectorMap();
+        initializeScriptContext();
     }
 
     /**
@@ -56,7 +60,7 @@ public final class Environment {
      * @param src
      */
     public Environment(Environment src) {
-        // never copy coconnector,conn,op,aliasMap into this
+        // never copy coconnector,conn,op,aliasMap,scriptContext into this
         this(new ConnectorMap(src.connectorMap), src.currentDirectory);
         this.timeoutSeconds = src.timeoutSeconds;
     }
@@ -181,6 +185,10 @@ public final class Environment {
         }
     }
 
+    void initializeScriptContext() {
+        this.scriptContext = new SimpleScriptContext();
+    }
+
     /**
      * Loads and refreshes connector map.
      */
@@ -264,6 +272,10 @@ public final class Environment {
 
     public AliasMap getAliasMap() {
         return aliasMap;
+    }
+
+    public ScriptContext getScriptContext() {
+        return scriptContext;
     }
 
 }

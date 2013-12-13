@@ -13,6 +13,7 @@ i.noalias=エイリアスは未定義です。
 i.proceeded={0} 件 処理されました。
 i.response-time=[ 応答時間: {0,number,#.###} 秒 ]
 i.rollbacked=ロールバックされました。
+i.script-context-initialized=Script Context は初期化されました。
 i.selected={0} 件 ヒットしました。
 i.updated={0} 件 更新されました。
 w.auto-commit-not-available=警告: 自動コミットモードが無効です。
