@@ -142,7 +142,7 @@ final class CommandProcessor {
             }
             log.debug("-s %s", file.getAbsolutePath());
             ScriptEngineManager factory = new ScriptEngineManager();
-            ScriptEngine engine = factory.getEngineByName("JavaScript");
+            ScriptEngine engine = factory.getEngineByExtension(Path.getExtension(file));
             engine.setContext(env.getScriptContext());
             engine.put("connection", env.getCurrentConnection());
             engine.put("conn", env.getCurrentConnection());
@@ -153,7 +153,6 @@ final class CommandProcessor {
             try {
                 Reader r = new FileReader(file);
                 try {
-                    engine.eval("function using(o, f) { f(o); o.close() }");
                     engine.eval(r);
                 } finally {
                     r.close();
