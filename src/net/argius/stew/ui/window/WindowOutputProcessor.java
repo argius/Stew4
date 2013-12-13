@@ -154,9 +154,13 @@ final class WindowOutputProcessor extends JFrame implements OutputProcessor, Any
 
     @SuppressWarnings("unused")
     private void clearResultSetTable() {
+        Container p = resultSetTable.getParent();
+        if (p != null && p.getParent() instanceof JScrollPane) {
+            ((JScrollPane)p.getParent()).setCorner(ScrollPaneConstants.UPPER_LEFT_CORNER, null);
+        }
         resultSetTable.setVisible(false);
         resultSetTable.getTableHeader().setVisible(false);
-        ((DefaultTableModel)resultSetTable.getModel()).setRowCount(0);
+        resultSetTable.reset();
     }
 
     @SuppressWarnings("unused")

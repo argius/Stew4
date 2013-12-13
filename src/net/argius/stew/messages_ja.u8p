@@ -35,7 +35,3 @@ e.readonly=エラー: コネクタは読取専用です。
 e.runtime=実行時エラー: {0}
 e.unsupported=[{0}]は実装されていません。
 e.usage=使い方: {0} {1}
-
-usage.cd=<ディレクトリ>
-usage.-f=<ファイル>
-usage.unalias=<短縮名>

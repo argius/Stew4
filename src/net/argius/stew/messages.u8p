@@ -36,8 +36,3 @@ e.readonly=Error: Connector is read-only.
 e.runtime=Runtime Error: {0}
 e.unsupported=[{0}] is unsupported.
 e.usage=Usage: {0} {1}
-
-usage.cd=<DIRECTORY>
-usage.-f=<FILE>
-usage.-s=<SCRIPT FILE>
-usage.unalias=<ALIAS>
