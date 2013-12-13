@@ -27,16 +27,9 @@ public final class Environment {
     private long connectorTimestamp;
     private AliasMap aliasMap;
 
-    /**
-     * A constructor.
-     */
-    public Environment() {
-        initializeQueryTimeout();
-        // init connections
-        this.connectorMap = new ConnectorMap();
-        loadConnectorMap();
-        // init directories
-        this.currentDirectory = getInitialCurrentDirectory();
+    private Environment(ConnectorMap connectorMap, File currentDirectory) {
+        this.connectorMap = connectorMap;
+        this.currentDirectory = currentDirectory;
         // init alias
         final File aliasPropFile = getSystemFile(ALIAS_PROPERTIES_NAME);
         this.aliasMap = new AliasMap(aliasPropFile);
@@ -50,14 +43,22 @@ public final class Environment {
     }
 
     /**
+     * A constructor.
+     */
+    public Environment() {
+        this(new ConnectorMap(), getInitialCurrentDirectory()); // init directories
+        initializeQueryTimeout();
+        loadConnectorMap();
+    }
+
+    /**
      * A constructor (for copy).
      * @param src
      */
     public Environment(Environment src) {
-        // never copy coconnector,conn,op into this
-        this.connectorMap = new ConnectorMap(src.connectorMap);
+        // never copy coconnector,conn,op,aliasMap into this
+        this(new ConnectorMap(src.connectorMap), src.currentDirectory);
         this.timeoutSeconds = src.timeoutSeconds;
-        this.currentDirectory = src.currentDirectory;
     }
 
     /**
