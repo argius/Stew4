@@ -39,7 +39,7 @@ final class TextSearchPanel extends JPanel implements AnyActionListener {
     TextSearchPanel(JFrame frame) {
         // [Init Instances]
         this.targets = new ArrayList<TextSearch>();
-        this.text = new JTextField(16);
+        this.text = new JTextField(20);
         this.useRegexCheck = new JCheckBox(res.get("useregex"));
         this.ignoreCaseCheck = new JCheckBox(res.get("ignorecase"));
         setLayout(new FlowLayout(FlowLayout.LEFT, 1, 1));
