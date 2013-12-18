@@ -5,17 +5,14 @@ import static net.argius.stew.Bootstrap.getPropertyAsInt;
 import static net.argius.stew.ui.window.AnyActionKey.*;
 import static net.argius.stew.ui.window.Utilities.getImageIcon;
 import static net.argius.stew.ui.window.Utilities.sleep;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
 import java.util.List;
-
 import javax.swing.*;
 import javax.swing.table.*;
-
 import net.argius.stew.*;
 import net.argius.stew.io.*;
 import net.argius.stew.ui.*;
@@ -157,6 +154,7 @@ final class WindowOutputProcessor extends JFrame implements OutputProcessor, Any
         resultSetTable.setVisible(false);
         resultSetTable.getTableHeader().setVisible(false);
         ((DefaultTableModel)resultSetTable.getModel()).setRowCount(0);
+        resultSetTable.resetSortState();
     }
 
     @SuppressWarnings("unused")

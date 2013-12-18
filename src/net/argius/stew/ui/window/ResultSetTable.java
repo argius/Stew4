@@ -7,7 +7,6 @@ import static java.awt.event.MouseEvent.MOUSE_PRESSED;
 import static javax.swing.KeyStroke.getKeyStroke;
 import static net.argius.stew.ui.window.AnyActionKey.*;
 import static net.argius.stew.ui.window.ResultSetTable.ActionKey.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
@@ -15,12 +14,10 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 import java.util.List;
-
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 import javax.swing.text.*;
-
 import net.argius.stew.*;
 import net.argius.stew.io.*;
 import net.argius.stew.text.*;
@@ -891,6 +888,11 @@ final class ResultSetTable extends JTable implements AnyActionListener, TextSear
     @Override
     public void reset() {
         // empty
+    }
+
+    void resetSortState() {
+        lastSortedIndex = -1;
+        lastSortedIsReverse = false;
     }
 
     static final class TableHeaderTextSearch implements TextSearch {
