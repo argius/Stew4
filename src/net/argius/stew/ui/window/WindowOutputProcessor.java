@@ -160,7 +160,8 @@ final class WindowOutputProcessor extends JFrame implements OutputProcessor, Any
         }
         resultSetTable.setVisible(false);
         resultSetTable.getTableHeader().setVisible(false);
-        resultSetTable.reset();
+        ((DefaultTableModel)resultSetTable.getModel()).setRowCount(0);
+        resultSetTable.resetSortState();
     }
 
     @SuppressWarnings("unused")
