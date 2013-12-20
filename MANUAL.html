@@ -12,7 +12,7 @@
 <body>
 <header>
 <h1 class="title">Stew4 User Manual</h1>
-<h3 class="date">version 4.0</h3>
+<h3 class="date">version 4.1</h3>
 </header>
 <nav id="TOC">
 <ul>
@@ -40,7 +40,7 @@
 <li><a href="#rollback---rollbacks-current-transaction-built-in">rollback - Rollbacks current transaction (built-in)</a></li>
 <li><a href="#e---evaluates-multiple-commands-built-in">-e - Evaluates multiple commands (built-in)</a></li>
 <li><a href="#f---executes-file-content-as-command-built-in">-f - Executes file content as command (built-in)</a></li>
-<li><a href="#s---executes-file-content-as-script-built-in">-s - Executes file content as script (built-in)</a></li>
+<li><a href="#s---executes-file-content-as-script-built-in-improved-feature-in-version-4.1">-s - Executes file content as script (built-in) &lt;improved feature in version 4.1&gt;</a></li>
 <li><a href="#cd---changes-current-directory-built-in">cd - Changes current directory (built-in)</a></li>
 <li><a href="#displays-directories-built-in">@ - Displays directories (built-in)</a></li>
 <li><a href="#displays-system-properties-built-in">? - Displays System Properties (built-in)</a></li>
@@ -117,18 +117,20 @@
 </ul>
 </nav>
 <h2 id="what-is-stew"><a href="#TOC">What Is Stew ?</a></h2>
-<p>...</p>
+<p>Stew is the database (SQL) tool with JDBC.</p>
+<p>For details, see &quot;README.md&quot;.</p>
 <h2 id="precautions"><a href="#TOC">PRECAUTIONS</a></h2>
 <h3 id="password-management"><a href="#TOC">Password Management</a></h3>
-<p>...</p>
-<p>For details, see <a href="#Connector-Settings">How To Use - Connector Settings</a>.</p>
+<p>By defaults, passwords are not encrypted. Setting &quot;Encryption&quot; in the connector will encrypt the password.</p>
+<p>For details, see <a href="#configuration-of-connector">How To Use - Configuration Of &quot;Connector&quot;</a>.</p>
 <h3 id="rollback-does-not-work-when-the-connection-is-disconnecting"><a href="#TOC">Rollback Does Not Work When The Connection Is Disconnecting</a></h3>
-<p>...</p>
-<p>For details, see <a href="#Connector-Settings">How To Use - Connector Settings</a>.</p>
+<p>By defaults, Rollback does not work automatically on disconnect. You have to care that some of DBMSs commit on disconnect.</p>
+<p>Setting &quot;Auto Rollback&quot; in the connector will rollback automatically on disconnect.</p>
+<p>For details, see <a href="#configuration-of-connector">How To Use - Configuration Of &quot;Connector&quot;</a>.</p>
 <h3 id="other"><a href="#TOC">Other</a></h3>
 <p>For more information, see the project site. <a href="http://stew.sourceforge.jp/"><code class="url">http://stew.sourceforge.jp/</code></a></p>
 <h2 id="installation"><a href="#TOC">Installation</a></h2>
-<p>...</p>
+<p>Just extract the package archive file.</p>
 <h2 id="running-app"><a href="#TOC">Running App</a></h2>
 <p>If you want to use GUI mode, execute the following command:</p>
 <pre><code>&gt; java -jar stew.jar --gui</code></pre>
@@ -220,14 +222,21 @@ $ stew --edit
 <h3 id="f---executes-file-content-as-command-built-in"><a href="#TOC">-f - Executes file content as command (built-in)</a></h3>
 <pre><code>&gt; -f &lt;file&gt;</code></pre>
 <p>...</p>
-<h3 id="s---executes-file-content-as-script-built-in"><a href="#TOC">-s - Executes file content as script (built-in)</a></h3>
-<pre><code>&gt; -s &lt;file&gt;</code></pre>
-<p>( default=JavaScript )</p>
-<p>The following variables will be available in the script:</p>
+<h3 id="s---executes-file-content-as-script-built-in-improved-feature-in-version-4.1"><a href="#TOC">-s - Executes file content as script (built-in) &lt;improved feature in version 4.1&gt;</a></h3>
+<pre><code>&gt; -s . | &lt;SCRIPT FILE&gt; | &lt;SCRIPT-NAME&gt; &lt;SCRIPT-CODE&gt;</code></pre>
+<ol type="1">
+<li>If the first argument is &quot;.&quot;, the Script Context is reset.</li>
+<li>If the first argument is a filename with extension, the script language is identified by the extension, and the file is run as the script language's script.</li>
+<li>Otherwise, the first argument is recognized as the name of a script language, and the rest of arguments are executed as the script language's script.</li>
+</ol>
+<p>(Only the built-in JavaScript by file is supported in version 4.0.)</p>
+<p>To use script languages except the built-in script language (JavaScript), it requires each script engine of script languages such as jruby, jython and groovy.</p>
+<p>The Script Context keeps global scope bindings, and following scripts can reuse the bindings. If you want to reset Script Context, input &quot; -s . &quot; above.</p>
+<p>The following variables will be available in the script (global scope):</p>
 <ul>
-<li>object of current connection: connection, conn</li>
-<li>object of Parameter: parameter, p</li>
-<li>object of OutputProcessor: outputProcessor, op</li>
+<li>the reference of current connection: connection, conn</li>
+<li>the reference of Parameter: parameter, p</li>
+<li>the reference of OutputProcessor: outputProcessor, op</li>
 </ul>
 <h3 id="cd---changes-current-directory-built-in"><a href="#TOC">cd - Changes current directory (built-in)</a></h3>
 <pre><code>&gt; cd &lt;directory&gt;</code></pre>

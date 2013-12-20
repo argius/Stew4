@@ -1,30 +1,33 @@
 % Stew4 User Manual
 %
-% version 4.0
+% version 4.1
 
 
 ## What Is Stew ?
 
-...
+Stew is the database (SQL) tool with JDBC.
+
+For details, see "README.md".
 
 
 ## PRECAUTIONS
 
 ### Password Management
 
-...
+By defaults, passwords are not encrypted.
+Setting "Encryption" in the connector will encrypt the password.
 
-
-For details, see [How To Use - Connector Settings](#Connector-Settings).
+For details, see [How To Use - Configuration Of "Connector"](#configuration-of-connector).
 
 
 ### Rollback Does Not Work When The Connection Is Disconnecting
 
+By defaults, Rollback does not work automatically on disconnect.
+You have to care that some of DBMSs commit on disconnect.
 
-...
+Setting "Auto Rollback" in the connector will rollback automatically on disconnect.
 
-
-For details, see [How To Use - Connector Settings](#Connector-Settings).
+For details, see [How To Use - Configuration Of "Connector"](#configuration-of-connector).
 
 
 ### Other
@@ -35,9 +38,7 @@ For more information, see the project site.
 
 ## Installation
 
-
-...
-
+Just extract the package archive file.
 
 
 ## Running App
@@ -182,17 +183,27 @@ For example, you can execute two export command continuously,
 ...
 
 
-### -s - Executes file content as script (built-in)
+### -s - Executes file content as script (built-in) \<improved feature in version 4.1\>
 
-    > -s <file>
+    > -s . | <SCRIPT FILE> | <SCRIPT-NAME> <SCRIPT-CODE>
 
-( default=JavaScript )
+ 1. If the first argument is ".", the Script Context is reset.
+ 2. If the first argument is a filename with extension, the script language is identified by the extension, and the file is run as the script language's script.
+ 3. Otherwise, the first argument is recognized as the name of a script language, and the rest of arguments are executed as the script language's script.
 
-The following variables will be available in the script:
+(Only the built-in JavaScript by file is supported in version 4.0.)
 
- * object of current connection: connection, conn
- * object of Parameter: parameter, p
- * object of OutputProcessor: outputProcessor, op
+To use script languages except the built-in script language (JavaScript), it requires each script engine of script languages such as jruby, jython and groovy.
+
+The Script Context keeps global scope bindings, and following scripts can reuse the bindings.
+If you want to reset Script Context, input " -s . " above.
+
+
+The following variables will be available in the script (global scope):
+
+ * the reference of current connection: connection, conn
+ * the reference of Parameter: parameter, p
+ * the reference of OutputProcessor: outputProcessor, op
 
 
 ### cd - Changes current directory (built-in)
