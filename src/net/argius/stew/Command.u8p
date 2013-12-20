@@ -10,10 +10,10 @@ e.file-already-exists=The file[{0}] already exists.
 e.failed-create-new-file=Failed to create the file[{0}].
 e.failed-mkdir-filedir=Failed to create dir of the file[{0}].
 
-usage.cd=<DIRECTORY>
-usage.-f=<FILE>
-usage.-s=. | <SCRIPT FILE> | <SCRIPT-NAME> <SCRIPT-CODE>
-usage.unalias=<ALIAS>
+usage.cd=<directory>
+usage.-f=<file>
+usage.-s=. | <script-file> | <script-name> <script-code>
+usage.unalias=<alias>
 usage.Count=<table-name> [<WHERE-phrase>]
 usage.Download=<root-dir> SELECT <data-column> [, file-path...] FROM ... 
 usage.Export=<file> [ HEADER ] [command(select|find|report)] \n        * except "report -"
