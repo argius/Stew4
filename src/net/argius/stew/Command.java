@@ -169,8 +169,7 @@ public abstract class Command {
      * @return
      */
     protected String getUsage() {
-        final String name = getClass().getName().replaceFirst(".*\\.([^\\.]+)", "$1");
-        return getMessage("usage." + name);
+        return getMessage("usage." + getClass().getSimpleName());
     }
 
     /**
