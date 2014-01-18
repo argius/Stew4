@@ -170,7 +170,7 @@ public final class ResourceManager {
      */
     public String get(String key, Object... args) {
         final String s = s(key);
-        return (s.length() == 0) ? key : MessageFormat.format(s(key), args);
+        return (s.length() == 0) ? key : MessageFormat.format(s, args);
     }
 
     /**
