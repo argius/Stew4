@@ -147,6 +147,7 @@
 <p>In CUI mode, to start edit tool, specifies --edit option.</p>
 <pre><code># command line
 $ stew --edit
+
 # running stew
 &gt; --edit</code></pre>
 <p>In GUI mode, executes &quot;Edit Connectors&quot; to start edit dialog.</p>
@@ -281,14 +282,30 @@ alias search=[select * from]
 <h3 id="load---executes-file-content-as-sql"><a href="#TOC">load - Executes file content as SQL</a></h3>
 <pre><code>&gt; load [&lt;SQL-file&gt; | &lt;data-file&gt; &lt;table-name&gt; [ HEADER ]]</code></pre>
 <p>This command executes the SQL read from specified file.</p>
-<p>When If a parameter is specified, executes file content as SQL, otherwise, two or more parameters, imports the file as data file. The file format is automatically selected by file extension. *. .csv : CSV format *. .xml : XML format (definition: src/net/argius/stew/io/stew-table.dtd) *. otherwise: TSV format</p>
+<p>When If a parameter is specified, executes file content as SQL, otherwise, two or more parameters, imports the file as data file. The file format is automatically selected by file extension.</p>
+<ul>
+<li>.csv : CSV format</li>
+<li>.xml : XML format (definition: src/net/argius/stew/io/stew-table.dtd)</li>
+<li>otherwise: TSV format</li>
+</ul>
 <p>(implementation detail: this is basically same as import command, executes as not batch but executes by record)</p>
 <h3 id="import---imports-from-file"><a href="#TOC">import - Imports from file</a></h3>
 <pre><code>import &lt;data-file&gt; &lt;table-name&gt; [ HEADER ]</code></pre>
-<p>This command imports from file as data file. The file format is automatically selected by file extension. *. .csv : CSV format *. .xml : XML format (definition: src/net/argius/stew/io/stew-table.dtd) *. otherwise: TSV format</p>
+<p>This command imports from file as data file. The file format is automatically selected by file extension.</p>
+<ul>
+<li>.csv : CSV format</li>
+<li>.xml : XML format (definition: src/net/argius/stew/io/stew-table.dtd)</li>
+<li>otherwise: TSV format</li>
+</ul>
 <p>(implementation detail: this is basically same as load command, but uses Statement#addBatch.)</p>
 <h3 id="export---exports-to-file"><a href="#TOC">export - Exports to file</a></h3>
-<p>This command exports result of command to the specified file. The file format is automatically selected by file extension. *. .htm,html : HTML format *. .csv : CSV format *. .xml : XML format (definition: src/net/argius/stew/io/stew-table.dtd) *. others: TSV format</p>
+<p>This command exports result of command to the specified file. The file format is automatically selected by file extension.</p>
+<ul>
+<li>.htm,html : HTML format</li>
+<li>.csv : CSV format</li>
+<li>.xml : XML format (definition: src/net/argius/stew/io/stew-table.dtd)</li>
+<li>others: TSV format</li>
+</ul>
 <h3 id="time---measures-time-to-execute-sql"><a href="#TOC">time - Measures time to execute SQL</a></h3>
 <pre><code>&gt; time [&lt;count&gt;] &lt;SQL&gt;</code></pre>
 <p>This command executes specified SQL and measures its execution time.</p>
@@ -337,8 +354,8 @@ Selected 42 records.</code></pre>
 <pre><code>&gt; upload &lt;file&gt; &lt;SQL(UPDATE|INSERT)&gt;</code></pre>
 <p>This command registers a data file to the column that specified by place-holder.</p>
 <h3 id="wait---waits-for-specified-interval"><a href="#TOC">wait - Waits for specified interval</a></h3>
-<pre><code>&gt; wait seconds()</code></pre>
-<p>This command waits for the interval that specified number of seconds. It may be useful for executing multiple commands.</p>
+<pre><code>&gt; wait seconds</code></pre>
+<p>This command waits for the interval that specified number (mixed decimal) of seconds. It may be useful for executing multiple commands.</p>
 <h2 id="the-gui-mode"><a href="#TOC">The GUI Mode</a></h2>
 <h3 id="common-behaviors"><a href="#TOC">Common Behaviors</a></h3>
 <p>Standard commands, &quot;undo&quot;, &quot;redo&quot;, &quot;cut&quot;, &quot;copy&quot;, &quot;paste&quot;, and &quot;select all&quot;, can use in all text components via context menu or shortcut key.</p>

@@ -76,6 +76,7 @@ In CUI mode, to start edit tool, specifies --edit option.
 
     # command line
     $ stew --edit
+
     # running stew
     > --edit
 
@@ -295,9 +296,10 @@ This command executes the SQL read from specified file.
 When If a parameter is specified, executes file content as SQL,
 otherwise, two or more parameters, imports the file as data file.
 The file format is automatically selected by file extension.
- *. .csv : CSV format
- *. .xml : XML format (definition: src/net/argius/stew/io/stew-table.dtd)
- *. otherwise: TSV format
+
+ * .csv : CSV format
+ * .xml : XML format (definition: src/net/argius/stew/io/stew-table.dtd)
+ * otherwise: TSV format
 
 (implementation detail: this is basically same as import command,
                         executes as not batch but executes by record)
@@ -309,9 +311,10 @@ The file format is automatically selected by file extension.
 
 This command imports from file as data file.
 The file format is automatically selected by file extension.
- *. .csv : CSV format
- *. .xml : XML format (definition: src/net/argius/stew/io/stew-table.dtd)
- *. otherwise: TSV format
+
+ * .csv : CSV format
+ * .xml : XML format (definition: src/net/argius/stew/io/stew-table.dtd)
+ * otherwise: TSV format
 
 (implementation detail: this is basically same as load command,
                         but uses Statement#addBatch.)
@@ -321,10 +324,11 @@ The file format is automatically selected by file extension.
 
 This command exports result of command to the specified file.
 The file format is automatically selected by file extension.
- *. .htm,html : HTML format
- *. .csv : CSV format
- *. .xml : XML format (definition: src/net/argius/stew/io/stew-table.dtd)
- *. others: TSV format
+
+ * .htm,html : HTML format
+ * .csv : CSV format
+ * .xml : XML format (definition: src/net/argius/stew/io/stew-table.dtd)
+ * others: TSV format
 
 
 ### time - Measures time to execute SQL
@@ -417,9 +421,9 @@ This command registers a data file to the column that specified by place-holder.
 
 ### wait - Waits for specified interval
 
-    > wait seconds()
+    > wait seconds
 
-This command waits for the interval that specified number of seconds.
+This command waits for the interval that specified number (mixed decimal) of seconds.
 It may be useful for executing multiple commands.
 
 
