@@ -233,7 +233,7 @@ By defauts, it displays JRE, OS and Locale.
     > ?
     JRE : ...
     OS : ...
-    Locale : ja_JP
+    Locale : en_UK
     > ? java.version user.timezone zzz
     java.version=[1.6.0_##]
     user.timezone=[Europe/London]
