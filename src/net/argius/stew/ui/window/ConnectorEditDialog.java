@@ -245,7 +245,7 @@ final class ConnectorEditDialog extends JDialog implements AnyActionListener {
         }
         t.setModel(new DefaultTableModel(data, headers));
         JPanel p = new JPanel(new BorderLayout());
-        p.add(new JLabel(res.get("dialog.refer-to-others.message")), BorderLayout.PAGE_START);
+        p.add(new JLabel(res.get("dialog.referToOthers.message")), BorderLayout.PAGE_START);
         p.add(new JScrollPane(t), BorderLayout.CENTER);
         if (showConfirmDialog(this, p, null, OK_CANCEL_OPTION) != OK_OPTION
             || t.getSelectedRow() < 0) {
