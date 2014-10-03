@@ -44,6 +44,13 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
     private static final Logger log = Logger.getLogger(DatabaseInfoTree.class);
     private static final ResourceManager res = ResourceManager.getInstance(DatabaseInfoTree.class);
 
+    private static final String TABLE_TYPE_TABLE = "TABLE";
+    private static final String TABLE_TYPE_VIEW = "VIEW";
+    private static final String TABLE_TYPE_INDEX = "INDEX";
+    private static final String TABLE_TYPE_SEQUENCE = "SEQUENCE";
+    private static final List<String> DEFAULT_TABLE_TYPES = //
+    Arrays.asList(TABLE_TYPE_TABLE, TABLE_TYPE_VIEW, TABLE_TYPE_INDEX, TABLE_TYPE_SEQUENCE);
+
     static volatile boolean showColumnNumber;
 
     private Connector currentConnector;
@@ -710,20 +717,28 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
         static List<TableTypeNode> getTableTypeNodes(DatabaseMetaData dbmeta,
                                                      String catalog,
                                                      String schema) throws SQLException {
-            List<TableTypeNode> a = new ArrayList<TableTypeNode>();
-            ResultSet rs = dbmeta.getTableTypes();
+            List<String> tableTypes = new ArrayList<String>(DEFAULT_TABLE_TYPES);
             try {
-                while (rs.next()) {
-                    TableTypeNode typeNode = new TableTypeNode(catalog, schema, rs.getString(1));
-                    if (typeNode.hasItems(dbmeta)) {
-                        a.add(typeNode);
+                ResultSet rs = dbmeta.getTableTypes();
+                try {
+                    while (rs.next()) {
+                        final String tableType = rs.getString(1);
+                        if (!DEFAULT_TABLE_TYPES.contains(tableType)) {
+                            tableTypes.add(tableType);
+                        }
                     }
+                } finally {
+                    rs.close();
                 }
-            } finally {
-                rs.close();
+            } catch (SQLException ex) {
+                log.warn("getTableTypes at getTableTypeNodes", ex);
             }
-            if (a.isEmpty()) {
-                a.add(new TableTypeNode(catalog, schema, "TABLE"));
+            List<TableTypeNode> a = new ArrayList<TableTypeNode>();
+            for (final String tableType : tableTypes) {
+                TableTypeNode typeNode = new TableTypeNode(catalog, schema, tableType);
+                if (typeNode.hasItems(dbmeta)) {
+                    a.add(typeNode);
+                }
             }
             return a;
         }
@@ -837,8 +852,7 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
                 while (rs.next()) {
                     final String table = rs.getString(3);
                     final String type = rs.getString(4);
-                    final boolean kindOfTable = type.matches("TABLE|VIEW|SYNONYM");
-                    a.add(new TableNode(catalog, schema, table, kindOfTable));
+                    a.add(new TableNode(catalog, schema, table, type));
                 }
             } finally {
                 rs.close();
@@ -871,14 +885,14 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
         private final String catalog;
         private final String schema;
         private final String name;
-        private final boolean kindOfTable;
+        private final String tableType;
 
-        TableNode(String catalog, String schema, String name, boolean kindOfTable) {
+        TableNode(String catalog, String schema, String name, String tableType) {
             super(name);
             this.catalog = catalog;
             this.schema = schema;
             this.name = name;
-            this.kindOfTable = kindOfTable;
+            this.tableType = tableType;
         }
 
         @Override
@@ -901,6 +915,9 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
 
         @Override
         public boolean isLeaf() {
+            if (TABLE_TYPE_SEQUENCE.equals(tableType)) {
+                return true;
+            }
             return false;
         }
 
@@ -919,10 +936,6 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
 
         String getName() {
             return name;
-        }
-
-        boolean isKindOfTable() {
-            return kindOfTable;
         }
 
     }
