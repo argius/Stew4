@@ -23,8 +23,8 @@ public final class Connector {
      */
     public Connector(String id, Properties props) {
         assert id != null;
-        if (!id.matches("[A-Za-z0-9]+")) {
-            throw new IllegalArgumentException("illegal id : " + id);
+        if (!id.matches("[A-Za-z0-9]+")) { // XXX move to new public method isValid
+            throw new IllegalArgumentException(ResourceManager.Default.get("e.id-can-only-contain-alphanum", id));
         }
         Properties p = new Properties();
         p.putAll(props);

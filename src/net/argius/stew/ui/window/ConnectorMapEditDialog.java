@@ -108,7 +108,14 @@ final class ConnectorMapEditDialog extends JDialog implements ChangeListener, An
                 final String message = res.get("e.id-already-exists", id);
                 showMessageDialog(this, message, null, ERROR_MESSAGE);
             } else {
-                openConnectorEditDialog(new Connector(id, new Properties()));
+                Connector connector;
+                try {
+                    connector = new Connector(id, new Properties());
+                } catch (IllegalArgumentException ex) {
+                    showMessageDialog(this, ex.getMessage(), null, ERROR_MESSAGE);
+                    return;
+                }
+                openConnectorEditDialog(connector);
             }
         } else if (ev.isAnyOf(modify)) {
             ConnectorEntry entry = (ConnectorEntry)idList.getSelectedValue();
@@ -130,7 +137,13 @@ final class ConnectorMapEditDialog extends JDialog implements ChangeListener, An
             connectorMap.remove(entry);
             connectorMap.put(newId, entry.getConnector());
             DefaultListModel m = (DefaultListModel)idList.getModel();
-            Connector newConnector = new Connector(newId, entry.getConnector());
+            Connector newConnector;
+            try {
+                newConnector = new Connector(newId, entry.getConnector());
+            } catch (IllegalArgumentException ex) {
+                showMessageDialog(this, ex.getMessage(), null, ERROR_MESSAGE);
+                return;
+            }
             m.set(m.indexOf(entry), new ConnectorEntry(newId, newConnector));
             idList.repaint();
         } else if (ev.isAnyOf(remove)) {
