@@ -267,6 +267,8 @@ public final class WindowLauncher implements
                 textSearchPanel.setVisible(true);
             } else if (ev.isAnyOf(toggleFocus)) {
                 if (textArea.isFocusOwner()) {
+                    infoTree.requestFocus();
+                } else if (infoTree.isFocusOwner()) {
                     resultSetTable.requestFocus();
                 } else {
                     textArea.requestFocus();
