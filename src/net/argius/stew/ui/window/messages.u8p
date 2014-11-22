@@ -1,5 +1,6 @@
 i.cancelled=The command was canceled.\n(The process in the server-side may be still working.)
 i.choose-connection=Choose Connector
+i.choose-history=Choose a command history of {0} histories
 i.confirm-close=Do you want to close this window?
 i.confirm-commit=Do you want to commit?
 i.confirm-overwrite=The file [{0}] already exists. Overwrite it?
@@ -19,6 +20,7 @@ i.statusbar-message=\ Execution Time {0} seconds ( {1} )
 w.connector-readonly=This connector is read-only.
 w.import-target-not-available=The destination to import is not available.
 w.no-connector=No Connector.
+w.no-histories=No command histories.
 w.not-connect=Not connected.
 e.cannot-open-help-automatically=Can't open help({0}) automatically on this platform.
 e.enables-select-just-1-table=You can choose only one of tables. 

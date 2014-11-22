@@ -298,6 +298,18 @@ public final class WindowLauncher implements
                 retrieveHistory(-1);
             } else if (ev.isAnyOf(nextHistory)) {
                 retrieveHistory(+1);
+            } else if (ev.isAnyOf(showAllHistories)) {
+                if (historyList.isEmpty()) {
+                    op.showInformationMessageDialog(res.get("w.no-histories"), null);
+                } else {
+                    final String msg = res.get("i.choose-history", historyList.size());
+                    final String lastCommand = historyList.get(historyList.size() - 1);
+                    Object value = op.showInputDialog(msg, null, historyList.toArray(), lastCommand);
+                    if (value != null) {
+                        textArea.replace((String)value);
+                        textArea.prepareSubmitting();
+                    }
+                }
             } else if (ev.isAnyOf(sendRollback)) {
                 if (confirmCommitable()
                     && showConfirmDialog(op, res.get("i.confirm-rollback"), null, OK_CANCEL_OPTION) == OK_OPTION) {
@@ -652,10 +664,7 @@ public final class WindowLauncher implements
             historyIndex = historyList.size() - 1;
         }
         textArea.replace(historyList.get(historyIndex));
-        final int endPosition = textArea.getEndPosition();
-        textArea.setSelectionStart(endPosition);
-        textArea.moveCaretPosition(endPosition);
-        textArea.requestFocus();
+        textArea.prepareSubmitting();
     }
 
     /**

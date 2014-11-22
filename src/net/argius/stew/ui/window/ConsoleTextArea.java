@@ -161,6 +161,17 @@ final class ConsoleTextArea extends JTextArea implements AnyActionListener, Text
     }
 
     /**
+     * Prepares submitting.
+     * Clears selection, moves cursor to end, and focuses this.
+     */
+    void prepareSubmitting() {
+        final int ep = getEndPosition();
+        setSelectionStart(ep);
+        moveCaretPosition(ep);
+        requestFocus();
+    }
+
+    /**
      * Clears text.
      */
     void clear() {

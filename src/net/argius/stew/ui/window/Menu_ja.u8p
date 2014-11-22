@@ -30,6 +30,7 @@ item.executeCommand=実行
 item.breakCommand=中断
 item.lastHistory=前のコマンド履歴
 item.nextHistory=次のコマンド履歴
+item.showAllHistories=コマンド履歴を全表示
 item.sendRollback=ロールバック
 item.sendCommit=コミット
 item.connect=接続
