@@ -21,14 +21,15 @@ public final class ConnectorConfiguration {
      */
     public static ConnectorMap load() throws IOException {
         final File f = getPath();
-        InputStream is = (f.exists())
-                ? new FileInputStream(f)
-                : new ByteArrayInputStream(new byte[0]);
-        try {
-            return load(is);
-        } finally {
-            is.close();
+        if (f.exists()) {
+            InputStream is = new FileInputStream(f);
+            try {
+                return load(is);
+            } finally {
+                is.close();
+            }
         }
+        return new ConnectorMap();
     }
 
     /**
@@ -45,23 +46,24 @@ public final class ConnectorConfiguration {
             bos.write(buffer, 0, c);
         }
         bos.flush();
+        byte[] data = bos.toByteArray();
         // create ID list
         List<String> idList = new ArrayList<String>();
-        ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-        BufferedReader reader = new BufferedReader(new InputStreamReader(bis));
+        Scanner scanner = new Scanner(new ByteArrayInputStream(data));
         try {
-            for (String line; (line = reader.readLine()) != null;) {
+            while (scanner.hasNextLine()) {
+                final String line = scanner.nextLine();
                 Matcher matcher = idPattern.matcher(line);
                 if (matcher.find()) {
                     idList.add(matcher.group(1));
                 }
             }
         } finally {
-            reader.close();
+            scanner.close();
         }
         // read as Properties
         Properties props = new Properties();
-        props.load(new ByteArrayInputStream(bos.toByteArray()));
+        props.load(new ByteArrayInputStream(data));
         // creates a instance
         return new ConnectorMap(idList, props);
     }
@@ -107,7 +109,7 @@ public final class ConnectorConfiguration {
         } finally {
             scanner.close();
         }
-        // rewrites records sorted by ID 
+        // rewrites records sorted by ID
         Comparator<String> c = new ConnectorPropertyComparator(new ArrayList<String>(map.keySet()));
         Collections.sort(lines, c);
         PrintWriter out = new PrintWriter(os);
