@@ -1,6 +1,6 @@
 % Stew4 User Manual
 %
-% version 4.1
+% version 4.2
 
 
 ## What Is Stew ?
@@ -33,7 +33,7 @@ For details, see [How To Use - Configuration Of "Connector"](#configuration-of-c
 ### Other
 
 For more information, see the project site.
-<http://stew.sourceforge.jp/>  
+<http://stew.sourceforge.jp/>
 
 
 ## Installation
@@ -405,8 +405,8 @@ This supporses to specify primary keys and file extension.
     Downloaded. (size=18bytes, file=./emp/USA/145.txt)
     Selected 42 records.
 
-When data exist a record, specified <data-column>,
-saves file to <root-dir> as file name.
+When data exist a record, specified &lt;data-column&gt;,
+saves file to &lt;root-dir&gt; as file name.
 
 Saving file already exists or no permission to write file,
 the process will abort immediately.
@@ -539,20 +539,20 @@ Copy Full Name
 :   This command copies the full qualified name of selected nodes as text into the clipboard.
 
 Refresh
-:   This command ... 
+:   This command ...
 
 Generate WHERE Phrase
-:   This command generates a WHERE phrase consisting selected tables and columns ... 
+:   This command generates a WHERE phrase consisting selected tables and columns ...
     selected same name, generate ...
 
 Generate SELECT Statement (with WHERE)
 :   This command generates a SELECT statement with "WHERE" keyword.
 
 Generate UPDATE Statement (with WHERE)
-:   This command ... 
+:   This command ...
 
 Generate INSERT Statement
-:   This command ... 
+:   This command ...
 
 Jump To Column By Name
 :   This command ... the name of selected node. Jump to the column which has the same name in current result table if found it.
@@ -750,7 +750,7 @@ When the window which command is running, is not active, "Post-Proccess" is invo
 There are following modes:
 
  * None(N): Does nothing.
- * Focus(F): Focuses window. 
+ * Focus(F): Focuses window.
  * Shake(S): Shakes window.
  * Blink(B): Blinks window.
 

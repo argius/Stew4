@@ -12,7 +12,7 @@
 <body>
 <header>
 <h1 class="title">Stew4 ユーザーマニュアル</h1>
-<h3 class="date">version 4.1</h3>
+<h3 class="date">version 4.2</h3>
 </header>
 <nav id="TOC">
 <ul>
@@ -127,7 +127,7 @@
 <p>「切断時に自動ロールバック」を設定すると、disconnectの際に自動的にrollbackを発行します。 詳細は、<a href="#接続設定">使い方-接続設定</a>を参照してください。</p>
 <h3 id="その他"><a href="#TOC">その他</a></h3>
 <p>プロジェクトサイトにて追加説明を行っていますので、あわせてご利用ください。</p>
-<p><a href="http://stew.sourceforge.jp/"><code class="url">http://stew.sourceforge.jp/</code></a><br><a href="http://argius.net/wiki/index.php?Stew%20tutorial"><code class="url">http://argius.net/wiki/index.php?Stew%20tutorial</code></a> (argius.net)</p>
+<p><a href="http://stew.sourceforge.jp/"><code class="url">http://stew.sourceforge.jp/</code></a> <a href="http://argius.net/wiki/index.php?Stew%20tutorial"><code class="url">http://argius.net/wiki/index.php?Stew%20tutorial</code></a> (argius.net)</p>
 <h2 id="インストール"><a href="#TOC">インストール</a></h2>
 <p>Java実行環境バージョン6(JRE6)以上がインストールされている必要があります。 また、利用するデータベースのJDBCドライバが必要です。</p>
 <p>リリースパッケージ(通常はzipファイル)を任意のディレクトリに展開します。</p>
@@ -207,7 +207,7 @@
 <h3 id="一行完結モードone-liner"><a href="#TOC">一行完結モード(One-Liner)</a></h3>
 <p>Stewの処理が一行の入力で完結します。 &quot;stew&quot;コマンドを設定していると仮定すると、次のような形式で実行します。</p>
 <pre><code>&gt; stew &lt;connector-id&gt; &lt;command&gt;</code></pre>
-<p>実行すると、<connector-id>の接続設定で接続を開始し、その接続を使用してコマンドを実行します。 コマンド実行後、接続を切断して終了します。</p>
+<p>実行すると、&lt;connector-id&gt;の接続設定で接続を開始し、その接続を使用してコマンドを実行します。 コマンド実行後、接続を切断して終了します。</p>
 <p>このモードでは、ご利用のshell環境の制約（例えば、ワイルドカード,リダイレクト など）を 受けますのでご注意ください。</p>
 <h3 id="エイリアスalias"><a href="#TOC">エイリアス(alias)</a></h3>
 <p>長いコマンドに別名(alias)をつけて、短縮コマンドとして利用できます。 詳しくは、コマンド<a href="#alias%20-%20エイリアス(コマンド別名)の登録%20(組み込みコマンド)">alias</a>, <a href="#unalias%20-%20エイリアス(コマンド別名)の解除%20(組み込みコマンド)">unalias</a>を参照してください。</p>
@@ -296,7 +296,11 @@ alias search=[select * from]
 <p>指定されたファイルを読み込んで、ＳＱＬを実行します。</p>
 <p>パラメータが1個の場合は、ファイルをSQL文と見なして実行します。</p>
 <p>パラメータが2個以上の場合は、ファイルをデータファイルと見なして、インポートを実行します。 ファイルの拡張子によって、ファイル形式が自動的に選択されます。 （実装詳細：基本的にはimportと同じ動作ですが、バッチ実行ではなく1件ずつ処理されます。）</p>
-<p>*. .csv : CSV形式 *. .xml : XML形式（定義：src/net/argius/stew/io/stew-table.dtd） *. 上記以外 : TAB区切りテキスト形式</p>
+<ul>
+<li>.csv : CSV形式</li>
+<li>.xml : XML形式（定義：src/net/argius/stew/io/stew-table.dtd）</li>
+<li>上記以外 : TAB区切りテキスト形式</li>
+</ul>
 <h3 id="import---ファイルのインポート"><a href="#TOC">import - ファイルのインポート</a></h3>
 <pre><code>&gt; import [&lt;データファイル&gt; &lt;テーブル名&gt; [ HEADER ]]</code></pre>
 <p>ファイルをデータファイルと見なして、インポートを実行します。 ファイルの拡張子によって、ファイル形式が自動的に選択されます。 （実装詳細：基本的には、loadのパラメータ2個以上指定した時と同じ動作ですが、 Statement.addBatch()を使用します。）</p>

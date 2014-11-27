@@ -12,7 +12,7 @@
 <body>
 <header>
 <h1 class="title">Stew4 User Manual</h1>
-<h3 class="date">version 4.1</h3>
+<h3 class="date">version 4.2</h3>
 </header>
 <nav id="TOC">
 <ul>
@@ -225,7 +225,7 @@ $ stew --edit
 <p>...</p>
 <h3 id="s---executes-file-content-as-script-built-in-improved-feature-in-version-4.1"><a href="#TOC">-s - Executes file content as script (built-in) &lt;improved feature in version 4.1&gt;</a></h3>
 <pre><code>&gt; -s . | &lt;SCRIPT FILE&gt; | &lt;SCRIPT-NAME&gt; &lt;SCRIPT-CODE&gt;</code></pre>
-<ol type="1">
+<ol>
 <li>If the first argument is &quot;.&quot;, the Script Context is reset.</li>
 <li>If the first argument is a filename with extension, the script language is identified by the extension, and the file is run as the script language's script.</li>
 <li>Otherwise, the first argument is recognized as the name of a script language, and the rest of arguments are executed as the script language's script.</li>
@@ -252,7 +252,7 @@ $ stew --edit
 <pre><code>&gt; ?
 JRE : ...
 OS : ...
-Locale : ja_JP
+Locale : en_UK
 &gt; ? java.version user.timezone zzz
 java.version=[1.6.0_##]
 user.timezone=[Europe/London]
@@ -348,7 +348,7 @@ Downloaded. (size=11bytes, file=./emp/England/28.txt)
  .
 Downloaded. (size=18bytes, file=./emp/USA/145.txt)
 Selected 42 records.</code></pre>
-<p>When data exist a record, specified <data-column>, saves file to <root-dir> as file name.</p>
+<p>When data exist a record, specified &lt;data-column&gt;, saves file to &lt;root-dir&gt; as file name.</p>
 <p>Saving file already exists or no permission to write file, the process will abort immediately.</p>
 <h3 id="upload---uploads-file-data-to-a-column"><a href="#TOC">upload - Uploads file data to a column</a></h3>
 <pre><code>&gt; upload &lt;file&gt; &lt;SQL(UPDATE|INSERT)&gt;</code></pre>

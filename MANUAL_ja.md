@@ -1,6 +1,6 @@
 % Stew4 ユーザーマニュアル
 %
-% version 4.1
+% version 4.2
 
 
 ## Stewとは何ですか？
@@ -37,7 +37,7 @@ DBMSによっては、トランザクションが自動的にコミットされ�
 
 プロジェクトサイトにて追加説明を行っていますので、あわせてご利用ください。
 
-<http://stew.sourceforge.jp/>  
+<http://stew.sourceforge.jp/>
 <http://argius.net/wiki/index.php?Stew%20tutorial> (argius.net)
 
 
@@ -162,7 +162,7 @@ PbePassword
 ドライバが特定できるようになっている必要があります。（次の段落で説明）
 
     > connect <user>/<password>@<URL>
-    
+
     (例)
     > connect user/password1@jdbc:firebirdsql://127.0.0.1//home/argius/test.fdb
 
@@ -186,7 +186,7 @@ Stewの処理が一行の入力で完結します。
 
     > stew <connector-id> <command>
 
-実行すると、<connector-id>の接続設定で接続を開始し、その接続を使用してコマンドを実行します。
+実行すると、&lt;connector-id&gt;の接続設定で接続を開始し、その接続を使用してコマンドを実行します。
 コマンド実行後、接続を切断して終了します。
 
 このモードでは、ご利用のshell環境の制約（例えば、ワイルドカード,リダイレクト など）を
@@ -375,9 +375,9 @@ Stewを終了します。確認待ちは行いません。
 ファイルの拡張子によって、ファイル形式が自動的に選択されます。
 （実装詳細：基本的にはimportと同じ動作ですが、バッチ実行ではなく1件ずつ処理されます。）
 
- *. .csv : CSV形式
- *. .xml : XML形式（定義：src/net/argius/stew/io/stew-table.dtd）
- *. 上記以外 : TAB区切りテキスト形式
+ * .csv : CSV形式
+ * .xml : XML形式（定義：src/net/argius/stew/io/stew-table.dtd）
+ * 上記以外 : TAB区切りテキスト形式
 
 
 ### import - ファイルのインポート
@@ -870,7 +870,7 @@ INSERT文を生成
     ダブルクリックでも同じ効果があります。
 
 列番号を表示/非表示
-:   列ノードの番号表示/非表示を切り替えます。 
+:   列ノードの番号表示/非表示を切り替えます。
 
 
 接続したときに自動で指定したノードを展開する機能があります（実験的機能）。

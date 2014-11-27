@@ -3,6 +3,12 @@
 
 ## New Features
 
+The new features in version 4.2 are listed below:
+
+Show all histories (GUI)
+:
+
+
 The new features in version 4.1 are nothing.
 
 
@@ -27,6 +33,12 @@ For more details, see MANUAL.html file.
 
 
 ## Changes
+
+The major changes on version 4.2 are listed below:
+
+change behavitor of toggle-focus
+:
+
 
 The major changes on version 4.1 are listed below:
 
