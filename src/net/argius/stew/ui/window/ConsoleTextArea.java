@@ -6,16 +6,16 @@ import static javax.swing.KeyStroke.getKeyStroke;
 import static net.argius.stew.ui.window.AnyActionKey.breakCommand;
 import static net.argius.stew.ui.window.AnyActionKey.execute;
 import static net.argius.stew.ui.window.ConsoleTextArea.ActionKey.*;
-
+import java.awt.datatransfer.*;
+import java.awt.dnd.*;
 import java.awt.event.*;
+import java.io.*;
 import java.util.*;
-
 import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.text.Highlighter.Highlight;
 import javax.swing.text.Highlighter.HighlightPainter;
 import javax.swing.undo.*;
-
 import net.argius.stew.*;
 import net.argius.stew.text.*;
 
@@ -50,6 +50,30 @@ final class ConsoleTextArea extends JTextArea implements AnyActionListener, Text
         aa.bindSelf(breakCommand, getKeyStroke(VK_B, ALT_DOWN_MASK));
         aa.bindSelf(addNewLine, getKeyStroke(VK_ENTER, shortcutKey));
         aa.bindSelf(jumpToHomePosition, getKeyStroke(VK_HOME, 0));
+        // [Events]
+        class DropTargetAdapterImpl extends DropTargetAdapter {
+            @Override
+            public void drop(DropTargetDropEvent dtde) {
+                Transferable t = dtde.getTransferable();
+                if (t.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+                    dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+                    try {
+                        StringBuilder buffer = new StringBuilder();
+                        @SuppressWarnings("unchecked")
+                        List<File> fileList = (List<File>)t.getTransferData(DataFlavor.javaFileListFlavor);
+                        for (File file : fileList) {
+                            buffer.append(file.getAbsolutePath()).append(" ");
+                        }
+                        append(buffer.toString());
+                    } catch (UnsupportedFlavorException ex) {
+                        throw new RuntimeException(ex);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            }
+        }
+        setDropTarget(new DropTarget(this, new DropTargetAdapterImpl()));
     }
 
     private final class ConsoleTextAreaDocumentFilter extends DocumentFilter {
@@ -252,7 +276,7 @@ final class ConsoleTextArea extends JTextArea implements AnyActionListener, Text
             removeHighlights();
         }
     }
-    
+
     @Override
     public void reset() {
         removeHighlights();
