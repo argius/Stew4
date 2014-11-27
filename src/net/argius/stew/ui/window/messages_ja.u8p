@@ -1,5 +1,6 @@
 i.cancelled=コマンドがキャンセルされました。\n（サーバ側の処理はキャンセルされていません。）
 i.choose-connection=接続を選択
+i.choose-history=コマンド履歴{0}件からコマンドを選択
 i.confirm-close=ウィンドウを閉じてよろしいですか？
 i.confirm-commit=コミットします。よろしいですか？
 i.confirm-overwrite=ファイル {0} は存在します。\n上書きしますか？
@@ -19,6 +20,7 @@ i.statusbar-message=\ 実行時間 {0} 秒 ( {1} )
 w.connector-readonly=コネクタは読取専用です。
 w.import-target-not-available=インポート先が無効です。
 w.no-connector=接続設定がありません。
+w.no-histories=コマンド履歴がありません。
 w.not-connect=接続されていません。
 e.cannot-open-help-automatically=このプラットフォームでは自動でヘルプ({0})を開けません。
 e.enables-select-just-1-table=テーブルは1つだけ選択できます。

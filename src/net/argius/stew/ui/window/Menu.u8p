@@ -73,7 +73,7 @@ item.autoAdjustModeHeaderAndValue.checkbox=yes
 
 group.command=Command
 group.command.mnemonic=C
-group.command.items=executeCommand,breakCommand,,lastHistory,nextHistory,sendRollback,sendCommit,,connect,disconnect,,postProcessMode,inputEcryptionKey,editConnectors
+group.command.items=executeCommand,breakCommand,,lastHistory,nextHistory,showAllHistories,sendRollback,sendCommit,,connect,disconnect,,postProcessMode,inputEcryptionKey,editConnectors
 item.executeCommand=Execute
 item.executeCommand.mnemonic=X
 item.executeCommand.shortcut=ctrl M
@@ -86,6 +86,8 @@ item.lastHistory.shortcut=ctrl UP
 item.nextHistory=History Next
 item.nextHistory.mnemonic=N
 item.nextHistory.shortcut=ctrl DOWN
+item.showAllHistories=Show All Histories
+item.showAllHistories.mnemonic=A
 item.sendRollback=Rollback
 item.sendRollback.mnemonic=R
 item.sendCommit=Commit

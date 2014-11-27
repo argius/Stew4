@@ -32,6 +32,7 @@ public enum AnyActionKey {
     breakCommand,
     lastHistory,
     nextHistory,
+    showAllHistories,
     sendRollback,
     sendCommit,
     connect,

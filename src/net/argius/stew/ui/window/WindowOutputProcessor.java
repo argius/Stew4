@@ -402,6 +402,36 @@ final class WindowOutputProcessor extends JFrame implements OutputProcessor, Any
         currentDirectory = dir;
     }
 
+    Object showInputDialog(String message, String title, Object[] values, Object initial) {
+        return showInputDialog(this, message, title, values, initial);
+    }
+
+    static Object showInputDialog(Component parent, String message, String title, Object[] values, Object initial) {
+        JOptionPane p = new JOptionPane(message, PLAIN_MESSAGE, OK_CANCEL_OPTION);
+        p.setWantsInput(true);
+        p.setSelectionValues(values);
+        p.setInitialSelectionValue(initial);
+        p.setComponentOrientation(parent.getComponentOrientation());
+        JDialog d = p.createDialog(parent, title);
+        Dimension size = d.getSize();
+        if (size.width > parent.getWidth() || size.height > parent.getHeight()) {
+            if (size.width > parent.getWidth()) {
+                size.width = (int)(parent.getWidth() * 0.95);
+            }
+            if (size.height > parent.getHeight()) {
+                size.height = (int)(parent.getHeight() * 0.95);
+            }
+            d.setPreferredSize(size);
+            d.setSize(size);
+            d.setLocationRelativeTo(parent);
+        }
+        p.selectInitialValue();
+        d.setVisible(true);
+        d.dispose();
+        Object value = p.getInputValue();
+        return (value == UNINITIALIZED_VALUE) ? null : value;
+    }
+
     void showInformationMessageDialog(String message, String title) {
         showInformationMessageDialog(this, message, title);
     }
