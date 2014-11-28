@@ -34,15 +34,13 @@ public final class ResourceManager {
         for (final String name : getResourceNames(o)) {
             for (final String suffix : suffixes) {
                 final String key = name + suffix;
-                Map<String, String> m = ResourceManager0.map.get(key);
-                if (m == null) {
-                    m = loadResource(key, "u8p", "utf-8");
-                    if (m == null) {
-                        continue;
-                    }
-                    ResourceManager0.map.putIfAbsent(key, m);
+                Map<String, String> m = (ResourceManager0.map.containsKey(key))
+                        ? ResourceManager0.map.get(key)
+                        : loadResource(key, "u8p", "utf-8");
+                if (m != null) {
+                    ResourceManager0.map.put(key, m);
+                    a.add(m);
                 }
-                a.add(m);
             }
         }
         return new ResourceManager(a);

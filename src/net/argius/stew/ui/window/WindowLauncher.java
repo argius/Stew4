@@ -6,7 +6,6 @@ import static javax.swing.JSplitPane.VERTICAL_SPLIT;
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS;
 import static net.argius.stew.ui.window.AnyActionKey.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
@@ -18,12 +17,10 @@ import java.util.Map.Entry;
 import java.util.List;
 import java.util.Timer;
 import java.util.concurrent.*;
-
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 import javax.swing.text.*;
-
 import net.argius.stew.*;
 import net.argius.stew.ui.*;
 
@@ -121,7 +118,7 @@ public final class WindowLauncher implements
         statusBar.setForeground(Color.BLUE);
         // [Layouts]
         /*
-         * split2 = ResultSetTable + TextArea 
+         * split2 = ResultSetTable + TextArea
          * +----------------------------+
          * | split2                     |
          * | +------------------------+ |
@@ -765,6 +762,7 @@ public final class WindowLauncher implements
             final DatabaseInfoTree infoTree = this.infoTree;
             final JLabel statusBar = this.statusBar;
             final OutputProcessor opref = env.getOutputProcessor();
+            final AnyAction invoker = new AnyAction(this);
             try {
                 doPreProcess();
                 executorService.execute(new Runnable() {
@@ -790,13 +788,8 @@ public final class WindowLauncher implements
                         if (env.getOutputProcessor() == opref) {
                             time = System.currentTimeMillis() - time;
                             statusBar.setText(res.get("i.statusbar-message", time / 1000f, cmd));
-                            AnyAction invoker = new AnyAction(this);
-                            invoker.doLater("callDoPostProcess");
+                            invoker.doLater("doPostProcess");
                         }
-                    }
-                    @SuppressWarnings("unused")
-                    void callDoPostProcess() {
-                        WindowLauncher.this.doPostProcess();
                     }
                 });
             } catch (Exception ex) {

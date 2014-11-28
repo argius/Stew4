@@ -1,6 +1,7 @@
 package net.argius.stew;
 
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
 
 /**
  * This is a ThreadFactory which creates threads as a daemon.
@@ -8,8 +9,8 @@ import java.util.concurrent.*;
 public final class DaemonThreadFactory implements ThreadFactory {
 
     private static final Logger log = Logger.getLogger(DaemonThreadFactory.class);
+    private static final AtomicInteger count = new AtomicInteger();
 
-    private static volatile int count;
     private static volatile ThreadFactory instance;
 
     private DaemonThreadFactory() {
@@ -28,7 +29,7 @@ public final class DaemonThreadFactory implements ThreadFactory {
 
     @Override
     public Thread newThread(Runnable r) {
-        final String name = String.format("ChildDaemon%d-of-%s", count++, Thread.currentThread());
+        final String name = String.format("ChildDaemon%d-of-%s", count.getAndIncrement(), Thread.currentThread());
         if (log.isDebugEnabled()) {
             log.debug("create thread: name=" + name);
         }
