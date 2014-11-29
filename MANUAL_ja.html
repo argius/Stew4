@@ -66,7 +66,7 @@
 <li><a href="#編集e---貼り付けp-ctrl-v">編集(E) - 貼り付け(P) Ctrl-V</a></li>
 <li><a href="#編集e---すべて選択a-ctrl-a">編集(E) - すべて選択(A) Ctrl-A</a></li>
 <li><a href="#編集e---検索f-ctrl-f">編集(E) - 検索(F) Ctrl-F</a></li>
-<li><a href="#編集e---フォーカス切替g-ctrl-g">編集(E) - フォーカス切替(G) Ctrl-G</a></li>
+<li><a href="#編集e---フォーカス切替g-ctrl-g-バージョン4.2の更新機能">編集(E) - フォーカス切替(G) Ctrl-G &lt;バージョン4.2の更新機能&gt;</a></li>
 <li><a href="#編集e---メッセージのクリア">編集(E) - メッセージのクリア</a></li>
 <li><a href="#表示v---ステータス-バーb">表示(V) - ステータス バー(B)</a></li>
 <li><a href="#表示v---列番号を表示c">表示(V) - 列番号を表示(C)</a></li>
@@ -81,6 +81,8 @@
 <li><a href="#コマンドc---中断b-ctrl-pausebreak">コマンド(C) - 中断(B) Ctrl-Pause(Break)</a></li>
 <li><a href="#コマンドc---前のコマンド履歴p-ctrl-">コマンド(C) - 前のコマンド履歴(P) Ctrl-↑</a></li>
 <li><a href="#コマンドc---次のコマンド履歴n-ctrl-">コマンド(C) - 次のコマンド履歴(N) Ctrl-↓</a></li>
+<li><a href="#コマンドc---次のコマンド履歴n-ctrl--1">コマンド(C) - 次のコマンド履歴(N) Ctrl-↓</a></li>
+<li><a href="#コマンドc---コマンド履歴を全表示-バージョン4.2の追加機能">コマンド(C) - コマンド履歴を全表示 &lt;バージョン4.2の追加機能&gt;</a></li>
 <li><a href="#コマンドc---ロールバックr">コマンド(C) - ロールバック(R)</a></li>
 <li><a href="#コマンドc---コミットm">コマンド(C) - コミット(M)</a></li>
 <li><a href="#コマンドc---接続c-ctrl-e">コマンド(C) - 接続(C) Ctrl-E</a></li>
@@ -127,7 +129,10 @@
 <p>「切断時に自動ロールバック」を設定すると、disconnectの際に自動的にrollbackを発行します。 詳細は、<a href="#接続設定">使い方-接続設定</a>を参照してください。</p>
 <h3 id="その他"><a href="#TOC">その他</a></h3>
 <p>プロジェクトサイトにて追加説明を行っていますので、あわせてご利用ください。</p>
-<p><a href="http://stew.sourceforge.jp/"><code class="url">http://stew.sourceforge.jp/</code></a> <a href="http://argius.net/wiki/index.php?Stew%20tutorial"><code class="url">http://argius.net/wiki/index.php?Stew%20tutorial</code></a> (argius.net)</p>
+<ul>
+<li><a href="http://stew.sourceforge.jp/"><code class="url">http://stew.sourceforge.jp/</code></a></li>
+<li><a href="http://argius.net/wiki/index.php?Stew%20tutorial"><code class="url">http://argius.net/wiki/index.php?Stew%20tutorial</code></a> (argius.net)</li>
+</ul>
 <h2 id="インストール"><a href="#TOC">インストール</a></h2>
 <p>Java実行環境バージョン6(JRE6)以上がインストールされている必要があります。 また、利用するデータベースのJDBCドライバが必要です。</p>
 <p>リリースパッケージ(通常はzipファイル)を任意のディレクトリに展開します。</p>
@@ -392,8 +397,8 @@ alias search=[select * from]
 <p>選択している領域（テーブル、テーブル列名、入出力欄、情報ツリー）内の文字列を検索します。</p>
 <p>テーブル、テーブル列名はセル単位で検索します。 入出力欄は、一致部分をハイライトします。 情報ツリーは、選択しているノードと同じ深さのノードとそれらのサブノード単位で検索します。</p>
 <p>オプションで、「正規表現を使用する」「大文字と小文字を区別しない」が指定できます。</p>
-<h3 id="編集e---フォーカス切替g-ctrl-g"><a href="#TOC">編集(E) - フォーカス切替(G) Ctrl-G</a></h3>
-<p>検索結果エリアと入力欄のフォーカスを入れ替えます(toggle)。</p>
+<h3 id="編集e---フォーカス切替g-ctrl-g-バージョン4.2の更新機能"><a href="#TOC">編集(E) - フォーカス切替(G) Ctrl-G &lt;バージョン4.2の更新機能&gt;</a></h3>
+<p>データベース情報ツリー、検索結果エリア、入力欄の間でフォーカスを入れ替えます(toggle)。</p>
 <h3 id="編集e---メッセージのクリア"><a href="#TOC">編集(E) - メッセージのクリア</a></h3>
 <p>入出力欄のメッセージをクリアします。</p>
 <h3 id="表示v---ステータス-バーb"><a href="#TOC">表示(V) - ステータス バー(B)</a></h3>
@@ -429,6 +434,10 @@ alias search=[select * from]
 <p>コマンド履歴を1つ遡ります。</p>
 <h3 id="コマンドc---次のコマンド履歴n-ctrl-"><a href="#TOC">コマンド(C) - 次のコマンド履歴(N) Ctrl-↓</a></h3>
 <p>コマンド履歴を1つ進みます。</p>
+<h3 id="コマンドc---次のコマンド履歴n-ctrl--1"><a href="#TOC">コマンド(C) - 次のコマンド履歴(N) Ctrl-↓</a></h3>
+<p>コマンド履歴を1つ進みます。</p>
+<h3 id="コマンドc---コマンド履歴を全表示-バージョン4.2の追加機能"><a href="#TOC">コマンド(C) - コマンド履歴を全表示 &lt;バージョン4.2の追加機能&gt;</a></h3>
+<p>すべてのコマンド履歴をダイアログで表示し、そこからコマンド履歴を選択して貼りつけることができます。</p>
 <h3 id="コマンドc---ロールバックr"><a href="#TOC">コマンド(C) - ロールバック(R)</a></h3>
 <p>確認ダイアログを表示し、OKを押すとロールバックを実行します。</p>
 <h3 id="コマンドc---コミットm"><a href="#TOC">コマンド(C) - コミット(M)</a></h3>

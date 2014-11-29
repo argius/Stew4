@@ -6,7 +6,7 @@
 The new features in version 4.2 are listed below:
 
 Show all histories (GUI)
-:
+:   This feature shows all command histories and pastes a chosen item.
 
 
 The new features in version 4.1 are nothing.
@@ -36,8 +36,10 @@ For more details, see MANUAL.html file.
 
 The major changes on version 4.2 are listed below:
 
-change behavitor of toggle-focus
-:
+change behavitor of toggle-focus (GUI)
+:   The command "Toggle focus" will toggle the focus between the result set
+    table, the text area and the database info tree after version 4.2.
+    Previously, the database info tree was out of the focus group.
 
 
 The major changes on version 4.1 are listed below:

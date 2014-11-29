@@ -77,7 +77,7 @@
 <li><a href="#edit---paste-p-ctrl-v">Edit - Paste (P) Ctrl-V</a></li>
 <li><a href="#edit---select-all-a-ctrl-a">Edit - Select All (A) Ctrl-A</a></li>
 <li><a href="#edit---find-f-ctrl-f">Edit - Find (F) Ctrl-F</a></li>
-<li><a href="#edit---toggle-focus-g-ctrl-g">Edit - Toggle focus (G) Ctrl-G</a></li>
+<li><a href="#edit---toggle-focus-g-ctrl-g-improved-feature-in-version-4.2">Edit - Toggle focus (G) Ctrl-G &lt;improved feature in version 4.2&gt;</a></li>
 <li><a href="#edit---clear-message-m">Edit - Clear Message (M)</a></li>
 <li><a href="#view---show-status-bar-s">View - Show Status Bar (S)</a></li>
 <li><a href="#view---show-column-number-c">View - Show Column Number (C)</a></li>
@@ -92,6 +92,7 @@
 <li><a href="#command---break-b-ctrl-pausebreak">Command - BREAK (B) Ctrl-Pause(Break)</a></li>
 <li><a href="#command---history-back-p-ctrl-up">Command - History Back (P) Ctrl-Up</a></li>
 <li><a href="#command---history-next-n-ctrl-down">Command - History Next (N) Ctrl-Down</a></li>
+<li><a href="#command---show-all-historiesa-new-feature-in-version-4.2">Command - Show All Histories(A) &lt;new feature in version 4.2&gt;</a></li>
 <li><a href="#command---rollback-r">Command - Rollback (R)</a></li>
 <li><a href="#command---commit-m">Command - Commit (M)</a></li>
 <li><a href="#command---connect-c-ctrl-e">Command - Connect (C) Ctrl-E</a></li>
@@ -128,7 +129,11 @@
 <p>Setting &quot;Auto Rollback&quot; in the connector will rollback automatically on disconnect.</p>
 <p>For details, see <a href="#configuration-of-connector">How To Use - Configuration Of &quot;Connector&quot;</a>.</p>
 <h3 id="other"><a href="#TOC">Other</a></h3>
-<p>For more information, see the project site. <a href="http://stew.sourceforge.jp/"><code class="url">http://stew.sourceforge.jp/</code></a></p>
+<p>For more information, see the project site.</p>
+<ul>
+<li><a href="http://stew.sourceforge.jp/"><code class="url">http://stew.sourceforge.jp/</code></a></li>
+<li><a href="http://argius.github.io/Stew4/"><code class="url">http://argius.github.io/Stew4/</code></a></li>
+</ul>
 <h2 id="installation"><a href="#TOC">Installation</a></h2>
 <p>Just extract the package archive file.</p>
 <h2 id="running-app"><a href="#TOC">Running App</a></h2>
@@ -225,7 +230,7 @@ $ stew --edit
 <p>...</p>
 <h3 id="s---executes-file-content-as-script-built-in-improved-feature-in-version-4.1"><a href="#TOC">-s - Executes file content as script (built-in) &lt;improved feature in version 4.1&gt;</a></h3>
 <pre><code>&gt; -s . | &lt;SCRIPT FILE&gt; | &lt;SCRIPT-NAME&gt; &lt;SCRIPT-CODE&gt;</code></pre>
-<ol>
+<ol type="1">
 <li>If the first argument is &quot;.&quot;, the Script Context is reset.</li>
 <li>If the first argument is a filename with extension, the script language is identified by the extension, and the file is run as the script language's script.</li>
 <li>Otherwise, the first argument is recognized as the name of a script language, and the rest of arguments are executed as the script language's script.</li>
@@ -477,8 +482,8 @@ Selected 42 records.</code></pre>
 <h3 id="edit---find-f-ctrl-f"><a href="#TOC">Edit - Find (F) Ctrl-F</a></h3>
 <p>This command finds out a specific string from selected component.</p>
 <p>...</p>
-<h3 id="edit---toggle-focus-g-ctrl-g"><a href="#TOC">Edit - Toggle focus (G) Ctrl-G</a></h3>
-<p>This command toggles focus between the result set table and the input/output area in a current window.</p>
+<h3 id="edit---toggle-focus-g-ctrl-g-improved-feature-in-version-4.2"><a href="#TOC">Edit - Toggle focus (G) Ctrl-G &lt;improved feature in version 4.2&gt;</a></h3>
+<p>This command toggles focus between the database info tree, the the result set table and the input/output area in a current window.</p>
 <h3 id="edit---clear-message-m"><a href="#TOC">Edit - Clear Message (M)</a></h3>
 <p>This command clears input/output area in a current window.</p>
 <h3 id="view---show-status-bar-s"><a href="#TOC">View - Show Status Bar (S)</a></h3>
@@ -514,6 +519,8 @@ Selected 42 records.</code></pre>
 <p>This command rotates command histories backward.</p>
 <h3 id="command---history-next-n-ctrl-down"><a href="#TOC">Command - History Next (N) Ctrl-Down</a></h3>
 <p>This command rotates command histories forward.</p>
+<h3 id="command---show-all-historiesa-new-feature-in-version-4.2"><a href="#TOC">Command - Show All Histories(A) &lt;new feature in version 4.2&gt;</a></h3>
+<p>This command shows all command histories and paste a choosen commmand.</p>
 <h3 id="command---rollback-r"><a href="#TOC">Command - Rollback (R)</a></h3>
 <p>This command displays confirm dialog and click &quot;OK&quot; to rollback.</p>
 <h3 id="command---commit-m"><a href="#TOC">Command - Commit (M)</a></h3>

@@ -33,7 +33,9 @@ For details, see [How To Use - Configuration Of "Connector"](#configuration-of-c
 ### Other
 
 For more information, see the project site.
-<http://stew.sourceforge.jp/>
+
+- <http://stew.sourceforge.jp/>
+- <http://argius.github.io/Stew4/>
 
 
 ## Installation
@@ -634,9 +636,9 @@ This command finds out a specific string from selected component.
 ...
 
 
-### Edit - Toggle focus (G) Ctrl-G
+### Edit - Toggle focus (G) Ctrl-G \<improved feature in version 4.2\>
 
-This command toggles focus between the result set table and the input/output area in a current window.
+This command toggles focus between the database info tree, the the result set table and the input/output area in a current window.
 
 ### Edit - Clear Message (M)
 
@@ -716,6 +718,11 @@ This command rotates command histories backward.
 ### Command - History Next (N) Ctrl-Down
 
 This command rotates command histories forward.
+
+
+### Command - Show All Histories(A) \<new feature in version 4.2\>
+
+This command shows all command histories and paste a choosen commmand.
 
 
 ### Command - Rollback (R)
