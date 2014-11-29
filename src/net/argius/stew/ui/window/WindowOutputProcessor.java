@@ -5,17 +5,14 @@ import static net.argius.stew.Bootstrap.getPropertyAsInt;
 import static net.argius.stew.ui.window.AnyActionKey.*;
 import static net.argius.stew.ui.window.Utilities.getImageIcon;
 import static net.argius.stew.ui.window.Utilities.sleep;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
 import java.util.List;
-
 import javax.swing.*;
 import javax.swing.table.*;
-
 import net.argius.stew.*;
 import net.argius.stew.io.*;
 import net.argius.stew.ui.*;
@@ -252,12 +249,8 @@ final class WindowOutputProcessor extends JFrame implements OutputProcessor, Any
         aa.doLater("removeComponent", p);
     }
 
-    private void requestFocusToTextAreaInWindow() {
+    void requestFocusToTextAreaInWindow() {
         textArea.requestFocusInWindow();
-    }
-
-    private void moveWindow(int incX, int incY) {
-        setLocation(getX() + incX, getY() + incY);
     }
 
     final class PostProcessAction extends JPanel {
@@ -272,7 +265,7 @@ final class WindowOutputProcessor extends JFrame implements OutputProcessor, Any
         }
         void shakeWindow(int range) {
             sign *= -1;
-            moveWindow(range * sign, 0);
+            setLocation(getX() + range * sign, getY() + 0);
         }
         void showComponent(JComponent c) {
             requestFocusToTextAreaInWindow();

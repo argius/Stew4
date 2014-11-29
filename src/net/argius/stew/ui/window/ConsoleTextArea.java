@@ -281,6 +281,8 @@ final class ConsoleTextArea extends JTextArea implements AnyActionListener, Text
     }
 
     private final class TextSearchKeyListener extends KeyAdapter {
+        TextSearchKeyListener() {
+        } // empty
         @Override
         public void keyTyped(KeyEvent e) {
             removeKeyListener(this);

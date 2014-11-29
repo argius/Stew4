@@ -4,16 +4,13 @@ import static java.awt.EventQueue.invokeLater;
 import static java.sql.Types.*;
 import static java.util.Collections.nCopies;
 import static net.argius.stew.text.TextUtilities.join;
-
 import java.math.*;
 import java.sql.*;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.*;
 import java.util.regex.*;
-
 import javax.swing.table.*;
-
 import net.argius.stew.*;
 
 /**
@@ -22,7 +19,7 @@ import net.argius.stew.*;
  */
 final class ResultSetTableModel extends DefaultTableModel {
 
-    private static final Logger log = Logger.getLogger(ResultSetTableModel.class);
+    static final Logger log = Logger.getLogger(ResultSetTableModel.class);
 
     private static final long serialVersionUID = -8861356207097438822L;
     private static final String PTN1 = "\\s*SELECT\\s.+?\\sFROM\\s+([^\\s]+).*";
@@ -230,20 +227,20 @@ final class ResultSetTableModel extends DefaultTableModel {
     }
 
     private static final class RowComparator implements Comparator<List<Object>> {
-    
+
         private final int f;
         private final int columnIndex;
-    
+
         RowComparator(int f, int columnIndex) {
             this.f = f;
             this.columnIndex = columnIndex;
         }
-    
+
         @Override
         public int compare(List<Object> row1, List<Object> row2) {
             return c(row1, row2) * f;
         }
-    
+
         private int c(List<Object> row1, List<Object> row2) {
             if (row1 == null || row2 == null) {
                 return row1 == null ? row2 == null ? 0 : -1 : 1;
@@ -274,7 +271,7 @@ final class ResultSetTableModel extends DefaultTableModel {
     }
 
     /**
-     * Checks whether this table is linkable. 
+     * Checks whether this table is linkable.
      * @return
      */
     boolean isLinkable() {
@@ -365,9 +362,10 @@ final class ResultSetTableModel extends DefaultTableModel {
         }
         final CountDownLatch latch = new CountDownLatch(1);
         final List<SQLException> errors = new ArrayList<SQLException>();
+        final Connection conn = this.conn;
+        final int[] types = this.types;
         // asynchronous execution
-        DaemonThreadFactory.execute(new Runnable() {
-            @SuppressWarnings("synthetic-access")
+        class SqlTask implements Runnable {
             @Override
             public void run() {
                 try {
@@ -410,7 +408,8 @@ final class ResultSetTableModel extends DefaultTableModel {
                 }
                 latch.countDown();
             }
-        });
+        }
+        DaemonThreadFactory.execute(new SqlTask());
         try {
             // waits for a task to stop
             latch.await(3L, TimeUnit.SECONDS);
@@ -418,7 +417,7 @@ final class ResultSetTableModel extends DefaultTableModel {
             throw new RuntimeException(ex);
         }
         if (latch.getCount() != 0) {
-            DaemonThreadFactory.execute(new Runnable() {
+            class SqlTaskErrorHandler implements Runnable {
                 @Override
                 public void run() {
                     try {
@@ -427,15 +426,17 @@ final class ResultSetTableModel extends DefaultTableModel {
                         log.warn(ex);
                     }
                     if (!errors.isEmpty()) {
-                        invokeLater(new Runnable() {
+                        class ErrorNotifier implements Runnable {
                             @Override
                             public void run() {
                                 WindowOutputProcessor.showErrorDialog(null, errors.get(0));
                             }
-                        });
+                        }
+                        invokeLater(new ErrorNotifier());
                     }
                 }
-            });
+            }
+            DaemonThreadFactory.execute(new SqlTaskErrorHandler());
         } else if (!errors.isEmpty()) {
             if (log.isDebugEnabled()) {
                 for (final Exception ex : errors) {

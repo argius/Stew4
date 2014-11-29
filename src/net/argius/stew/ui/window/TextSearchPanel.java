@@ -6,14 +6,11 @@ import static javax.swing.JOptionPane.WARNING_MESSAGE;
 import static javax.swing.JOptionPane.showMessageDialog;
 import static javax.swing.KeyStroke.getKeyStroke;
 import static net.argius.stew.ui.window.TextSearchPanel.ActionKey.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
-
 import javax.swing.*;
-
 import net.argius.stew.*;
 import net.argius.stew.ui.window.TextSearch.Matcher;
 
@@ -70,7 +67,7 @@ final class TextSearchPanel extends JPanel implements AnyActionListener {
         add(ignoreCaseCheck);
         // [Setup Focus Policy]
         final FocusTraversalPolicy parentPolicy = frame.getFocusTraversalPolicy();
-        frame.setFocusTraversalPolicy(new LayoutFocusTraversalPolicy() {
+        class LayoutFocusTraversalPolicyImpl extends LayoutFocusTraversalPolicy {
             @Override
             public Component getComponentAfter(Container focusCycleRoot, Component component) {
                 if (component == ignoreCaseCheck) {
@@ -85,7 +82,8 @@ final class TextSearchPanel extends JPanel implements AnyActionListener {
                 }
                 return parentPolicy.getComponentBefore(focusCycleRoot, component);
             }
-        });
+        }
+        frame.setFocusTraversalPolicy(new LayoutFocusTraversalPolicyImpl());
         // [Events]
         // text field
         ContextMenu.createForText(text);

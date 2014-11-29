@@ -41,14 +41,15 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
         toggleShowColumnNumber
     }
 
-    private static final Logger log = Logger.getLogger(DatabaseInfoTree.class);
+    static final Logger log = Logger.getLogger(DatabaseInfoTree.class);
+
     private static final ResourceManager res = ResourceManager.getInstance(DatabaseInfoTree.class);
 
     private static final String TABLE_TYPE_TABLE = "TABLE";
     private static final String TABLE_TYPE_VIEW = "VIEW";
     private static final String TABLE_TYPE_INDEX = "INDEX";
     private static final String TABLE_TYPE_SEQUENCE = "SEQUENCE";
-    private static final List<String> DEFAULT_TABLE_TYPES = //
+    static final List<String> DEFAULT_TABLE_TYPES = //
     Arrays.asList(TABLE_TYPE_TABLE, TABLE_TYPE_VIEW, TABLE_TYPE_INDEX, TABLE_TYPE_SEQUENCE);
 
     static volatile boolean showColumnNumber;
@@ -462,7 +463,7 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
         expandNode(connectorNode, dbmeta);
         createdStatusSet.add(connectorNode);
         // events
-        addTreeWillExpandListener(new TreeWillExpandListener() {
+        class TreeWillExpandListenerImpl implements TreeWillExpandListener {
             @Override
             public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
                 TreePath path = event.getPath();
@@ -484,7 +485,8 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
             public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
                 // ignore
             }
-        });
+        }
+        addTreeWillExpandListener(new TreeWillExpandListenerImpl());
         this.dbmeta = dbmeta;
         // showing
         model.reload();
@@ -578,37 +580,21 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
             return;
         }
         final DefaultTreeModel model = (DefaultTreeModel)getModel();
-        final InfoNode tmpNode = new InfoNode(res.get("i.paren-in-processing")) {
-            @Override
-            protected List<InfoNode> createChildren(DatabaseMetaData dbmeta) throws SQLException {
-                return Collections.emptyList();
-            }
-            @Override
-            public boolean isLeaf() {
-                return true;
-            }
-        };
-        invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                model.insertNodeInto(tmpNode, parent, 0);
-            }
-        });
+        final DefaultMutableTreeNode tmpNode = new DefaultMutableTreeNode(res.get("i.paren-in-processing"));
         // asynchronous
-        DaemonThreadFactory.execute(new Runnable() {
+        class NodeExpansionTask implements Runnable {
             @Override
             public void run() {
+                class Task1 implements Runnable {
+                    @Override
+                    public void run() {
+                        model.insertNodeInto(tmpNode, parent, 0);
+                    }
+                }
+                invokeLater(new Task1());
+                final List<InfoNode> children;
                 try {
-                    final List<InfoNode> children = new ArrayList<InfoNode>(parent.createChildren(dbmeta));
-                    invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            for (InfoNode child : children) {
-                                model.insertNodeInto(child, parent, parent.getChildCount());
-                            }
-                            model.removeNodeFromParent(tmpNode);
-                        }
-                    });
+                    children = new ArrayList<InfoNode>(parent.createChildren(dbmeta));
                 } catch (SQLException ex) {
                     try {
                         if (dbmeta.getConnection().isClosed())
@@ -618,8 +604,19 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
                     }
                     throw new RuntimeException(ex);
                 }
+                class Task2 implements Runnable {
+                    @Override
+                    public void run() {
+                        for (InfoNode child : children) {
+                            model.insertNodeInto(child, parent, parent.getChildCount());
+                        }
+                        model.removeNodeFromParent(tmpNode);
+                    }
+                }
+                invokeLater(new Task2());
             }
-        });
+        }
+        DaemonThreadFactory.execute(new NodeExpansionTask());
     }
 
     /**
@@ -671,9 +668,7 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
                                                       int row,
                                                       boolean hasFocus) {
             super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-            if (value instanceof InfoNode) {
-                setIcon(Utilities.getImageIcon(((InfoNode)value).getIconName()));
-            }
+            setIcon((value instanceof InfoNode) ? Utilities.getImageIcon(((InfoNode)value).getIconName()) : null);
             if (value instanceof ColumnNode) {
                 if (showColumnNumber) {
                     TreePath path = tree.getPathForRow(row);
@@ -901,11 +896,7 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
             ResultSet rs = dbmeta.getColumns(catalog, schema, name, null);
             try {
                 while (rs.next()) {
-                    a.add(new ColumnNode(rs.getString(4),
-                                         rs.getString(6),
-                                         rs.getInt(7),
-                                         rs.getString(18),
-                                         this));
+                    a.add(new ColumnNode(rs.getString(4), rs.getString(6), rs.getInt(7), rs.getString(18), this));
                 }
             } finally {
                 rs.close();

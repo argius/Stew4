@@ -7,7 +7,6 @@ import static java.awt.event.MouseEvent.MOUSE_PRESSED;
 import static javax.swing.KeyStroke.getKeyStroke;
 import static net.argius.stew.ui.window.AnyActionKey.*;
 import static net.argius.stew.ui.window.ResultSetTable.ActionKey.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
@@ -15,12 +14,10 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 import java.util.List;
-
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 import javax.swing.text.*;
-
 import net.argius.stew.*;
 import net.argius.stew.io.*;
 import net.argius.stew.text.*;
@@ -108,25 +105,25 @@ final class ResultSetTable extends JTable implements AnyActionListener, TextSear
     }
 
     private final class RowHeaderMouseInputListener extends MouseInputAdapter {
-    
+
         @SuppressWarnings("hiding")
         private final RowHeader rowHeader;
         private int dragStartRow;
-    
+
         RowHeaderMouseInputListener(RowHeader rowHeader) {
             this.rowHeader = rowHeader;
         }
-    
+
         @Override
         public void mousePressed(MouseEvent e) {
             changeSelection(e);
         }
-    
+
         @Override
         public void mouseDragged(MouseEvent e) {
             changeSelection(e);
         }
-    
+
         private void changeSelection(MouseEvent e) {
             Point p = new Point(e.getX(), e.getY());
             if (SwingUtilities.isLeftMouseButton(e)) {
@@ -175,9 +172,9 @@ final class ResultSetTable extends JTable implements AnyActionListener, TextSear
     }
 
     private final class ColumnHeaderMouseInputListener extends MouseInputAdapter {
-    
+
         private int dragStartColumn;
-    
+
         ColumnHeaderMouseInputListener() {
         } // empty
 
@@ -189,14 +186,14 @@ final class ResultSetTable extends JTable implements AnyActionListener, TextSear
             }
             mousePositionForColumnHeader.setLocation(e.getPoint());
         }
-    
+
         @Override
         public void mouseDragged(MouseEvent e) {
             if (SwingUtilities.isLeftMouseButton(e)) {
                 changeSelection(e);
             }
         }
-    
+
         private void changeSelection(MouseEvent e) {
             final Point p = e.getPoint();
             int id = e.getID();
@@ -307,7 +304,7 @@ final class ResultSetTable extends JTable implements AnyActionListener, TextSear
             } else {
                 for (final int i : getSelectedColumns()) {
                     a.add(m.getColumnName(i));
-                }   
+                }
             }
             ClipboardHelper.setString(TextUtilities.join(TAB, a));
         } else if (ev.isAnyOf(findColumnName)) {
@@ -450,12 +447,13 @@ final class ResultSetTable extends JTable implements AnyActionListener, TextSear
                 final JTextComponent text = (JTextComponent)c;
                 AnyAction aa = new AnyAction(text);
                 aa.setUndoAction();
-                c.addFocusListener(new FocusAdapter() {
+                class EditCanceledOnCellFocusLost extends FocusAdapter {
                     @Override
                     public void focusLost(FocusEvent e) {
                         editingCanceled(new ChangeEvent(e.getSource()));
                     }
-                });
+                }
+                c.addFocusListener(new EditCanceledOnCellFocusLost());
             }
         }
     }
@@ -664,7 +662,7 @@ final class ResultSetTable extends JTable implements AnyActionListener, TextSear
             }
             table.changeSelection(ri, ci, false, extend);
         }
-        
+
     }
 
     private static final class NullValueRenderer extends DefaultTableCellRenderer {

@@ -5,15 +5,12 @@ import static javax.swing.JOptionPane.*;
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS;
 import static net.argius.stew.ui.window.ConnectorMapEditDialog.ActionKey.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
-
 import javax.swing.*;
 import javax.swing.event.*;
-
 import net.argius.stew.*;
 
 final class ConnectorMapEditDialog extends JDialog implements ChangeListener, AnyActionListener {
@@ -80,11 +77,12 @@ final class ConnectorMapEditDialog extends JDialog implements ChangeListener, An
     }
 
     private final class IdListMouseListener extends MouseAdapter {
+        IdListMouseListener() {
+        } // empty
         @Override
         public void mouseClicked(MouseEvent e) {
             if (e.getClickCount() % 2 == 0) {
-                ConnectorEntry entry = (ConnectorEntry)idList.getSelectedValue();
-                openConnectorEditDialog(entry.getConnector());
+                openConnectorEditDialog();
             }
         }
     }
@@ -190,6 +188,11 @@ final class ConnectorMapEditDialog extends JDialog implements ChangeListener, An
         button.setActionCommand(cmd);
         button.addActionListener(new AnyAction(this));
         return button;
+    }
+
+    void openConnectorEditDialog() {
+        ConnectorEntry entry = (ConnectorEntry)idList.getSelectedValue();
+        openConnectorEditDialog(entry.getConnector());
     }
 
     private void openConnectorEditDialog(Connector connector) {

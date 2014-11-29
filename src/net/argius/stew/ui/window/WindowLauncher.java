@@ -29,12 +29,14 @@ import net.argius.stew.ui.*;
  */
 public final class WindowLauncher implements
                                  Launcher,
+                                 FocusListener,
                                  AnyActionListener,
                                  Runnable,
                                  UncaughtExceptionHandler {
 
+    static final ResourceManager res = ResourceManager.getInstance(WindowLauncher.class);
     private static final Logger log = Logger.getLogger(WindowLauncher.class);
-    private static final ResourceManager res = ResourceManager.getInstance(WindowLauncher.class);
+
     private static final List<WindowLauncher> instances = Collections.synchronizedList(new ArrayList<WindowLauncher>());
 
     private final WindowOutputProcessor op;
@@ -105,13 +107,7 @@ public final class WindowLauncher implements
         textSearchMap.put(textArea, textArea);
         for (Entry<JComponent, TextSearch> entry : textSearchMap.entrySet()) {
             final JComponent c = entry.getKey();
-            c.addFocusListener(new FocusAdapter() {
-                @Override
-                public void focusGained(FocusEvent e) {
-                    focused = c;
-                    textSearchPanel.setCurrentTarget(textSearchMap.get(c));
-                }
-            });
+            c.addFocusListener(this);
             textSearchPanel.addTarget(entry.getValue());
         }
         // status bar
@@ -198,6 +194,18 @@ public final class WindowLauncher implements
     public void uncaughtException(Thread t, Throwable e) {
         log.fatal(e, "%s", t);
         op.showErrorDialog(e);
+    }
+
+    @Override
+    public void focusGained(FocusEvent e) {
+        JComponent c = (JComponent)e.getSource();
+        focused = c;
+        textSearchPanel.setCurrentTarget(textSearchMap.get(c));
+    }
+
+    @Override
+    public void focusLost(FocusEvent e) {
+        // ignore
     }
 
     @Override
@@ -763,35 +771,36 @@ public final class WindowLauncher implements
             final JLabel statusBar = this.statusBar;
             final OutputProcessor opref = env.getOutputProcessor();
             final AnyAction invoker = new AnyAction(this);
-            try {
-                doPreProcess();
-                executorService.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        Connection conn = env.getCurrentConnection();
-                        long time = System.currentTimeMillis();
-                        if (!Command.invoke(env, cmd)) {
-                            exit();
-                        }
-                        if (infoTree.isEnabled()) {
-                            try {
-                                if (env.getCurrentConnection() != conn) {
-                                    infoTree.clear();
-                                    if (env.getCurrentConnection() != null) {
-                                        infoTree.refreshRoot(env);
-                                    }
+            final class CommandTask implements Runnable {
+                @Override
+                public void run() {
+                    Connection conn = env.getCurrentConnection();
+                    long time = System.currentTimeMillis();
+                    if (!Command.invoke(env, cmd)) {
+                        exit();
+                    }
+                    if (infoTree.isEnabled()) {
+                        try {
+                            if (env.getCurrentConnection() != conn) {
+                                infoTree.clear();
+                                if (env.getCurrentConnection() != null) {
+                                    infoTree.refreshRoot(env);
                                 }
-                            } catch (Throwable th) {
-                                handleError(th);
                             }
-                        }
-                        if (env.getOutputProcessor() == opref) {
-                            time = System.currentTimeMillis() - time;
-                            statusBar.setText(res.get("i.statusbar-message", time / 1000f, cmd));
-                            invoker.doLater("doPostProcess");
+                        } catch (Throwable th) {
+                            handleError(th);
                         }
                     }
-                });
+                    if (env.getOutputProcessor() == opref) {
+                        time = System.currentTimeMillis() - time;
+                        statusBar.setText(res.get("i.statusbar-message", time / 1000f, cmd));
+                        invoker.doLater("doPostProcess");
+                    }
+                }
+            }
+            try {
+                doPreProcess();
+                executorService.execute(new CommandTask());
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             } finally {
@@ -832,6 +841,8 @@ public final class WindowLauncher implements
     }
 
     private static final class WakeupTimerTask extends TimerTask {
+        WakeupTimerTask() {
+        } // empty
         private final AnyAction aa = new AnyAction(this);
         @Override
         public void run() {
