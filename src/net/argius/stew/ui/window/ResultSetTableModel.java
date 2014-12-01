@@ -408,7 +408,7 @@ final class ResultSetTableModel extends DefaultTableModel {
                 latch.countDown();
             }
         }
-        DaemonThreadFactory.execute(new SqlTask());
+        AnyAction.doParallel(new SqlTask());
         try {
             // waits for a task to stop
             latch.await(3L, TimeUnit.SECONDS);
@@ -429,7 +429,7 @@ final class ResultSetTableModel extends DefaultTableModel {
                     }
                 }
             }
-            DaemonThreadFactory.execute(new SqlTaskErrorHandler());
+            AnyAction.doParallel(new SqlTaskErrorHandler());
         } else if (!errors.isEmpty()) {
             if (log.isDebugEnabled()) {
                 for (final Exception ex : errors) {

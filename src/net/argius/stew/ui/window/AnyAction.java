@@ -3,22 +3,23 @@ package net.argius.stew.ui.window;
 import static java.awt.event.KeyEvent.VK_Y;
 import static java.awt.event.KeyEvent.VK_Z;
 import static javax.swing.KeyStroke.getKeyStroke;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.*;
 import java.util.*;
-
+import java.util.concurrent.*;
 import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.undo.*;
-
 import net.argius.stew.*;
 
 /**
  * These class are members of the suite of event-handling as an internal framework.
  */
 final class AnyAction extends AbstractAction implements Runnable {
+
+    /** Thread Pool using Daemon Thread */
+    private static final ExecutorService threadPool = Executors.newCachedThreadPool(DaemonThreadFactory.getInstance());
 
     /** AnyActionListener, JComponent, or JTextComponent */
     private Object o;
@@ -66,7 +67,11 @@ final class AnyAction extends AbstractAction implements Runnable {
 
     void doParallel(String methodName, final Object... args) {
         final String label = "AnyAction#doParallel";
-        DaemonThreadFactory.execute(new Task(label, o, resolveMethod(methodName), args));
+        doParallel(new Task(label, o, resolveMethod(methodName), args));
+    }
+
+    static void doParallel(Runnable runnable) {
+        threadPool.execute(runnable);
     }
 
     private static final class Task implements Runnable {

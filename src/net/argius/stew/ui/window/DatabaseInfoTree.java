@@ -616,7 +616,7 @@ final class DatabaseInfoTree extends JTree implements AnyActionListener, TextSea
                 invokeLater(new Task2());
             }
         }
-        DaemonThreadFactory.execute(new NodeExpansionTask());
+        AnyAction.doParallel(new NodeExpansionTask());
     }
 
     /**
