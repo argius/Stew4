@@ -3,9 +3,7 @@ package net.argius.stew;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
-
 import javax.script.*;
-
 import net.argius.stew.io.*;
 import net.argius.stew.ui.*;
 
@@ -109,7 +107,7 @@ final class CommandProcessor {
             outputMessage("i.exit");
             return false;
         }
-        // connect 
+        // connect
         if (commandName.equalsIgnoreCase("connect") || commandName.equalsIgnoreCase("-c")) {
             connect(p);
             return true;
@@ -117,7 +115,12 @@ final class CommandProcessor {
         // from file
         if (commandName.equals("-f")) {
             final File file = Path.resolve(env.getCurrentDirectory(), p.at(1));
+            final String abspath = file.getAbsolutePath();
+            if (log.isDebugEnabled()) {
+                log.debug("absolute path = [%s]", abspath);
+            }
             if (!file.isFile()) {
+                outputMessage("e.file-not-exists", abspath);
                 throw new UsageException(res.get("usage.-f"));
             }
             log.debug("-f %s", file.getAbsolutePath());
