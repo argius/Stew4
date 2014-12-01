@@ -1,6 +1,5 @@
 package net.argius.stew.ui.window;
 
-import static java.awt.EventQueue.invokeLater;
 import static java.sql.Types.*;
 import static java.util.Collections.nCopies;
 import static net.argius.stew.text.TextUtilities.join;
@@ -426,13 +425,7 @@ final class ResultSetTableModel extends DefaultTableModel {
                         log.warn(ex);
                     }
                     if (!errors.isEmpty()) {
-                        class ErrorNotifier implements Runnable {
-                            @Override
-                            public void run() {
-                                WindowOutputProcessor.showErrorDialog(null, errors.get(0));
-                            }
-                        }
-                        invokeLater(new ErrorNotifier());
+                        WindowOutputProcessor.showErrorDialog(null, errors.get(0));
                     }
                 }
             }

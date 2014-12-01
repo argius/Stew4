@@ -440,6 +440,7 @@ final class WindowOutputProcessor extends JFrame implements OutputProcessor, Any
     }
 
     static void showErrorDialog(final Component parent, final Throwable th) {
+        // this method can call from non AWT thread
         log.atEnter("showErrorDialog");
         log.warn(th, "");
         final String s1;
@@ -454,13 +455,25 @@ final class WindowOutputProcessor extends JFrame implements OutputProcessor, Any
             th.printStackTrace(out);
             s2 = replaceEOL(buffer.toString());
         }
-        JPanel p = new JPanel(new BorderLayout());
-        p.add(new JScrollPane(setupReadOnlyTextArea(new JTextArea(s1, 2, 60))), BorderLayout.NORTH);
-        p.add(new JScrollPane(setupReadOnlyTextArea(new JTextArea(s2, 6, 60))), BorderLayout.CENTER);
-        JDialog d = (new JOptionPane(p, ERROR_MESSAGE)).createDialog(parent, res.get("e.error"));
-        d.setResizable(true);
-        d.setVisible(true);
-        d.dispose();
+        final String title = res.get("e.error");
+        class ErrorDialogTask implements Runnable {
+            @Override
+            public void run() {
+                JPanel p = new JPanel(new BorderLayout());
+                p.add(new JScrollPane(setupReadOnlyTextArea(new JTextArea(s1, 2, 60))), BorderLayout.NORTH);
+                p.add(new JScrollPane(setupReadOnlyTextArea(new JTextArea(s2, 6, 60))), BorderLayout.CENTER);
+                JDialog d = (new JOptionPane(p, ERROR_MESSAGE)).createDialog(parent, title);
+                d.setResizable(true);
+                d.setVisible(true);
+                d.dispose();
+            }
+        }
+        ErrorDialogTask task = new ErrorDialogTask();
+        if (EventQueue.isDispatchThread()) {
+            task.run();
+        } else {
+            EventQueue.invokeLater(task);
+        }
         log.atExit("showErrorDialog");
     }
 
