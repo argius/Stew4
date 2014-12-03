@@ -114,6 +114,9 @@ final class CommandProcessor {
         }
         // from file
         if (commandName.equals("-f")) {
+            if (!p.has(1)) {
+                throw new UsageException(res.get("usage.-f"));
+            }
             final File file = Path.resolve(env.getCurrentDirectory(), p.at(1));
             final String abspath = file.getAbsolutePath();
             if (log.isDebugEnabled()) {
