@@ -443,7 +443,7 @@ A window has "Input/Output Area", "Result Set Table", "Database Info Tree", "Mai
 By default, the database info tree, the status bar and the find pane" are hidden.
 
 
-### Input/Output Area
+### Input/Output Area ( text area )
 
 The I/O area is similar to CUI interface.
 
@@ -453,6 +453,12 @@ The I/O area is similar to CUI interface.
 
 
 ... Context menus for this component has the standard commands.
+
+
+### Paste Paths Into The Text Area Via DnD \<new feature in version 4.2\>
+
+When you drag and drop from file manager into the text area, the paths of these files will be pasted to the text area.
+It also allows plural files.
 
 
 ### Result Set Table
