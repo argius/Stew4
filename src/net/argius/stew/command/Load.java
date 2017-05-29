@@ -1,11 +1,9 @@
 package net.argius.stew.command;
 
 import static net.argius.stew.text.TextUtilities.join;
-
 import java.io.*;
 import java.sql.*;
 import java.util.*;
-
 import net.argius.stew.*;
 import net.argius.stew.io.*;
 
@@ -81,7 +79,7 @@ public class Load extends Command {
         try {
             final Object[] header;
             if (hasHeader) {
-                header = importer.nextRow();
+                header = importer.getHeader();
             } else {
                 Importer importer2 = Importer.getImporter(file);
                 try {
